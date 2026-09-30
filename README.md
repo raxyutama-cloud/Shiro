@@ -49,9 +49,10 @@ Save and download videos, photos, and music from 16 platforms. No watermarks. No
 4. [Supported Platforms & Scraper Engines](#-supported-platforms--scraper-engines)
 5. [For Developers & Building from Source](#-for-developers--building-from-source)
 6. [Scraper Architecture](#-scraper-architecture)
+7. [Support Shiro](#-support-shiro)
 
-7. [Disclaimer](#-disclaimer)
-8. [License & Terms of Use](#-license--terms-of-use)
+8. [Disclaimer](#-disclaimer)
+9. [License & Terms of Use](#-license--terms-of-use)
 
 ---
 
@@ -246,11 +247,39 @@ Shiro's scraper core is bundled via esbuild into `public/js/scrapers/bundle.js` 
 - **Collaborative Development**: Honest developers who want to improve scrapers or fix broken endpoints are always welcome to coordinate through [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
+## ☕ Support Shiro
+
+Donations keep the scrapers running. Inside the app, open **Settings → Support Me**:
+
+- **Dynamic QRIS**: type any amount (min. Rp1.000), the app creates a QR on demand through the [buatqris.site](https://buatqris.site) API, shows the total and admin fee, links to the payment page, and polls the transaction status until it is paid.
+- **Static QRIS**: use the code below if you prefer to transfer manually.
+
+<a href="assets/qris-shiro.jpeg" target="_blank">
+  <img src="assets/qris-shiro.jpeg" alt="QRIS: Shiro api (NMID ID1025425768377 A01)" height="240" />
+</a>
+
+### Maintainers: configuring dynamic QRIS
+
+`public/js/config/qris-config.js` is **gitignored** — the `account_id` / `secret_token` must never be committed. It is generated during CI in every build workflow from two repository secrets:
+
+| Secret | Value |
+| --- | --- |
+| `BQ_ACCOUNT_ID` | your buatqris.site account id |
+| `BQ_SECRET_TOKEN` | your buatqris.site secret token |
+
+For local development, copy the template and fill it in:
+
+```bash
+cp public/js/config/qris-config.example.js public/js/config/qris-config.js
+```
+
+Without a config the app simply falls back to the static QRIS image.
+
 ## ⚖️ Disclaimer
 
 - **Personal & Educational Use Only**: Shiro is an open-source educational utility designed solely for personal media archiving and research. Users are solely responsible for complying with local copyright laws and the terms of service of source platforms.
 - **Zero Media Hosting**: Shiro does not host, stream, cache, or redistribute any media on external servers. All operations execute strictly on-demand directly on the user's local device.
-- **Respect for Third-Party Providers**: Shiro acts purely as a client-side wrapper querying publicly available web endpoints. If you are an operator or developer of an upstream service and wish to have your endpoint excluded or removed from Shiro, please reach out via GitHub Issues or email (riazrepo@gmail.com), and we will promptly accommodate your request.
+- **Respect for Third-Party Providers**: Shiro acts purely as a client-side wrapper querying publicly available web endpoints. If you are an operator or developer of an upstream service and wish to have your endpoint excluded or removed from Shiro, please reach out via GitHub Issues or email (raxy.utama@gmail.com), and we will promptly accommodate your request.
 
 ## 📄 License & Terms of Use
 
