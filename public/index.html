@@ -25,6 +25,7 @@
       rel="stylesheet"
     />
     <script src="js/vendor/pdf-lib.min.js"></script>
+    <script src="js/config/qris-config.js"></script>
   </head>
   <body>
     <canvas id="bgAnimationCanvas" class="bg-animation-canvas"></canvas>
@@ -3400,11 +3401,7 @@
                 </div>
                 <span class="info-val">raxy.utama@gmail.com</span>
               </a>
-              <a
-                href="qris-shiro.jpeg"
-                class="settings-item link-item"
-                target="_blank"
-              >
+              <div class="settings-item action-item" id="supportBtn">
                 <div class="item-label">
                   <svg
                     viewBox="0 0 24 24"
@@ -3418,8 +3415,8 @@
                   </svg>
                   <span data-i18n="label-support">Support Me</span>
                 </div>
-                <span class="info-val">QRIS · Shiro api</span>
-              </a>
+                <span class="action-label" data-i18n="btn-donate">DONATE</span>
+              </div>
               <a
                 href="https://www.instagram.com/yudhhaa23"
                 class="settings-item link-item"
@@ -3611,6 +3608,96 @@
                 >Don't show again</span
               >
             </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donation Modal (QRIS) -->
+      <div id="donationOverlay" class="modal-overlay hidden">
+        <div class="modal-content info-modal donation-modal">
+          <div class="modal-header">
+            <h3 id="donationTitle" data-i18n="donate-title">Support Shiro</h3>
+            <button id="closeDonation" aria-label="Close donation">
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="currentColor"
+              >
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="info-body">
+            <p class="donation-note" data-i18n="donate-note">
+              Support the development of Shiro. Any amount helps keep the
+              scrapers running.
+            </p>
+
+            <div class="donation-form" id="donationForm">
+              <label class="donation-label" for="donationAmount"
+                ><span data-i18n="donate-amount">Amount (IDR)</span></label
+              >
+              <input
+                type="number"
+                inputmode="numeric"
+                id="donationAmount"
+                class="donation-input"
+                min="1000"
+                step="500"
+                value="10000"
+                placeholder="10000"
+              />
+
+              <label class="donation-label" for="donationDesc"
+                ><span data-i18n="donate-desc">Description</span></label
+              >
+              <input
+                type="text"
+                id="donationDesc"
+                class="donation-input"
+                maxlength="60"
+                value="Donasi Shiro"
+                placeholder="Donasi Shiro"
+              />
+
+              <button
+                id="generateQrisBtn"
+                class="primary-btn donation-generate"
+                type="button"
+              >
+                <span data-i18n="btn-generate-qris">GENERATE QRIS</span>
+              </button>
+            </div>
+
+            <div
+              id="donationStatus"
+              class="donation-status hidden"
+              role="status"
+            ></div>
+
+            <div id="qrBox" class="donation-qr hidden">
+              <img id="qrImage" alt="QRIS" width="220" height="220" />
+              <div id="qrMeta" class="donation-meta"></div>
+              <a
+                id="paymentLink"
+                class="primary-btn donation-pay"
+                target="_blank"
+                rel="noopener"
+                href="#"
+                data-i18n="btn-open-payment"
+                >OPEN PAYMENT PAGE</a
+              >
+            </div>
+
+            <div class="donation-footer">
+              <span data-i18n="donate-static-alt">Static QR instead:</span>
+              <a href="qris-shiro.jpeg" target="_blank" rel="noopener"
+                ><span data-i18n="btn-static-qr">Static QRIS</span></a
+              >
+            </div>
           </div>
         </div>
       </div>

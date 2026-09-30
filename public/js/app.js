@@ -56,6 +56,7 @@ import "./modules/settings.js";
 import "./modules/history.js";
 import "./modules/modals.js";
 import "./modules/update.js";
+import "./modules/support.js";
 import "./modules/intents.js";
 import "./modules/download.js";
 import "./ui/downloadBubble.js";

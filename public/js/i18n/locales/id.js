@@ -405,5 +405,27 @@ export default {
   "ua-chrome": "Mobile Chrome",
   "ua-default": "Default",
   "ua-desktop": "Desktop Chrome",
-  "ua-safari": "iOS Safari"
+  "ua-safari": "iOS Safari",
+  "btn-donate": "DONASI",
+  "donate-title": "Dukung Shiro",
+  "donate-note":
+    "Dukung pengembangan Shiro. Berapapun nominalnya sangat membantu.",
+  "donate-amount": "Nominal (IDR)",
+  "donate-amount-label": "Nominal",
+  "donate-desc": "Keterangan",
+  "btn-generate-qris": "BUAT QRIS",
+  "btn-open-payment": "BUKA HALAMAN BAYAR",
+  "btn-static-qr": "QRIS Statis",
+  "donate-static-alt": "QR statis, kalau mau:",
+  "donate-creating": "Membuat QRIS…",
+  "donate-error": "Gagal membuat QRIS. Coba lagi.",
+  "donate-invalid-amount": "Nominal minimal Rp1.000.",
+  "donate-not-configured": "QRIS dinamis belum diatur. Pakai QR statis di bawah.",
+  "donate-status-pending": "Menunggu pembayaran…",
+  "donate-status-success": "Pembayaran diterima. Terima kasih!",
+  "donate-status-expired": "QRIS kedaluwarsa. Silakan buat QR baru.",
+  "donate-status-failed": "Pembayaran gagal.",
+  "donate-total": "Total",
+  "donate-fee": "Biaya admin",
+  "donate-tx": "Transaksi"
 };

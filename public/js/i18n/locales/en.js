@@ -405,5 +405,28 @@ export default {
   "ua-chrome": "Mobile Chrome",
   "ua-default": "Default",
   "ua-desktop": "Desktop Chrome",
-  "ua-safari": "iOS Safari"
+  "ua-safari": "iOS Safari",
+  "btn-donate": "DONATE",
+  "donate-title": "Support Shiro",
+  "donate-note":
+    "Support the development of Shiro. Any amount helps keep the scrapers running.",
+  "donate-amount": "Amount (IDR)",
+  "donate-amount-label": "Amount",
+  "donate-desc": "Description",
+  "btn-generate-qris": "GENERATE QRIS",
+  "btn-open-payment": "OPEN PAYMENT PAGE",
+  "btn-static-qr": "Static QRIS",
+  "donate-static-alt": "Static QR instead:",
+  "donate-creating": "Creating QRIS…",
+  "donate-error": "Failed to create QRIS. Please try again.",
+  "donate-invalid-amount": "Minimum amount is Rp1.000.",
+  "donate-not-configured":
+    "Dynamic QRIS is not configured. Use the static QR below.",
+  "donate-status-pending": "Waiting for payment…",
+  "donate-status-success": "Payment received. Thank you!",
+  "donate-status-expired": "QRIS expired. Please generate a new one.",
+  "donate-status-failed": "Payment failed.",
+  "donate-total": "Total",
+  "donate-fee": "Fee",
+  "donate-tx": "Transaction"
 };

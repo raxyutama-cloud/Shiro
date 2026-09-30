@@ -6,7 +6,7 @@
 <p align="center"><em><strong>Save anything, From anywhere.</strong></em></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-v4.4.0-brown?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/Version-v4.4.1-brown?style=flat-square" alt="Version">
   <img src="https://img.shields.io/github/downloads/raxyutama-cloud/Shiro/total?style=flat-square&color=blue" alt="Downloads">
   <img src="https://img.shields.io/github/stars/raxyutama-cloud/Shiro?style=flat-square&color=gold" alt="Stars">
   <img src="https://img.shields.io/github/repo-size/raxyutama-cloud/Shiro?style=flat-square&color=purple" alt="Repo Size">

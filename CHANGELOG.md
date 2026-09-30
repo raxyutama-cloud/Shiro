@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.4.1] - 2026-09-30
+
+### Added
+
+- **Dynamic donation (QRIS)**: the *Support Me* entry now opens a donation modal where the donor types any amount (min. Rp1.000) and an optional note. The QR code is created on demand through the buatqris.site API (`api_create_qris`), showing amount, total, admin fee and transaction ID, plus an *Open payment page* button.
+- **Payment status**: after the QR is shown the modal polls `api_check_status` every 5 seconds and reports `pending` → `success` / `expired` / `failed`, with a toast when the payment lands. Polling stops as soon as the modal closes.
+- **Static fallback**: if the QRIS credentials are missing, the modal hides the form and points to the static `qris-shiro.jpeg` instead.
+- **Credential safety**: `account_id` / `secret_token` are **not** stored in the repository. `public/js/config/qris-config.js` is gitignored and generated during CI from the `BQ_ACCOUNT_ID` and `BQ_SECRET_TOKEN` GitHub Actions secrets; a committed template lives at `public/js/config/qris-config.example.js`.
+
+### Changed
+
+- **Support Me** button in Settings opens the donation modal instead of linking straight to the QRIS image.
+- **Version**: bumped to 4.4.1 (`versionCode` 21 on Android).
+
+### Notes
+
+- The API is called with `x-www-form-urlencoded` POST to `https://api.buatqris.site`. It sends `Access-Control-Allow-Origin: *`, so the same code path works from the Android WebView (`CapacitorHttp`), the Tauri desktop builds (`tauri_http_request`) and plain web builds (`fetch`).
+
+---
+
 ## [4.4.0] - 2026-09-30
 
 ### Changed

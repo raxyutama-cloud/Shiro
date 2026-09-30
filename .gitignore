@@ -49,3 +49,6 @@ src-scrapers/
 scripts/
 android/app/src/main/cpp/
 src-tauri/cpp/
+
+# QRIS credentials (created in CI from Actions secrets)
+qris-config.js
