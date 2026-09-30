@@ -6,7 +6,7 @@
 <p align="center"><em><strong>Save anything, From anywhere.</strong></em></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-v4.4.1-brown?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/Version-v4.4.2-brown?style=flat-square" alt="Version">
   <img src="https://img.shields.io/github/downloads/raxyutama-cloud/Shiro/total?style=flat-square&color=blue" alt="Downloads">
   <img src="https://img.shields.io/github/stars/raxyutama-cloud/Shiro?style=flat-square&color=gold" alt="Stars">
   <img src="https://img.shields.io/github/repo-size/raxyutama-cloud/Shiro?style=flat-square&color=purple" alt="Repo Size">
@@ -251,27 +251,29 @@ Shiro's scraper core is bundled via esbuild into `public/js/scrapers/bundle.js` 
 
 Donations keep the scrapers running. Inside the app, open **Settings → Support Me**:
 
-- **Dynamic QRIS**: type any amount (min. Rp1.000), the app creates a QR on demand through the [buatqris.site](https://buatqris.site) API, shows the total and admin fee, links to the payment page, and polls the transaction status until it is paid.
+- **Dynamic QRIS**: type any amount (min. Rp1.000), the app asks Shiro's own proxy to create a QR on demand, shows the total and admin fee, links to the payment page, and polls the transaction status until it is paid.
 - **Static QRIS**: use the code below if you prefer to transfer manually.
 
 <a href="assets/qris-shiro.jpeg" target="_blank">
   <img src="assets/qris-shiro.jpeg" alt="QRIS: Shiro api (NMID ID1025425768377 A01)" height="240" />
 </a>
 
-### Maintainers: configuring dynamic QRIS
+### How the donation API is wired
 
-`public/js/config/qris-config.js` is **gitignored** — the `account_id` / `secret_token` must never be committed. It is generated during CI in every build workflow from two repository secrets:
+Payment credentials **never ship in the app** — the app only talks to a small proxy on the maintainer's server:
 
-| Secret | Value |
-| --- | --- |
-| `BQ_ACCOUNT_ID` | your buatqris.site account id |
-| `BQ_SECRET_TOKEN` | your buatqris.site secret token |
-
-For local development, copy the template and fill it in:
-
-```bash
-cp public/js/config/qris-config.example.js public/js/config/qris-config.js
 ```
+App (Android / iOS / Desktop / Web)
+  ├─ POST https://www.api-shiro.my.id/qris/create   { amount, description }
+  └─ POST https://www.api-shiro.my.id/qris/status   { transaction_id }
+        └─ qris-proxy  (systemd: qris-proxy.service → 127.0.0.1:3460)
+              ├─ account_id / secret_token  → .env on the server only
+              └─ POST https://api.buatqris.site
+```
+
+- `public/js/config/qris-config.js` contains only the proxy URL. It is committed, and CI injects no secrets (the old `BQ_ACCOUNT_ID` / `BQ_SECRET_TOKEN` Actions secrets are no longer used).
+- The proxy rate-limits per IP (15 creations / 10 minutes, 300 status checks / 10 minutes), validates the amount (Rp1.000 – Rp10.000.000), sanitises the note, and whitelists the fields it returns — so the token cannot be abused by third parties.
+- Running your own fork: deploy `qris-proxy`, put your credentials in its `.env`, and point `qris-config.js` at it. You never have to embed a secret anywhere.
 
 Without a config the app simply falls back to the static QRIS image.
 

@@ -1,12 +1,12 @@
-// support.js — menu donasi (QRIS dinamis via api.buatqris.site)
+// support.js — menu donasi (QRIS dinamis lewat proxy server Shiro)
 //
-// Kredensial dibaca dari window.__SHIRO_QRIS__ (js/config/qris-config.js,
-// dibuat di CI dari GitHub Actions secrets — TIDAK di-commit ke repo).
+// Aplikasi TIDAK menyimpan rahasia apa pun. Konfigurasi hanya berisi URL
+// proxy (js/config/qris-config.js, ikut di-commit) — account_id dan
+// secret_token tinggal di server, jadi token tidak pernah ikut ke APK.
 // Jika konfigurasi tidak ada, modal jatuh ke QR statis.
 import { t } from "../i18n/index.js";
 import { CapacitorHttp, showToast } from "../utils/index.js";
 
-const API_URL_FALLBACK = "https://api.buatqris.site";
 const POLL_MS = 5000;
 const MIN_AMOUNT = 1000;
 
@@ -33,21 +33,18 @@ let currentTx = null;
 
 function getConfig() {
   const c = window.__SHIRO_QRIS__ || null;
-  if (!c || !c.accountId || !c.secretToken) return null;
-  if (String(c.accountId).startsWith("YOUR_")) return null;
+  if (!c || !c.apiUrl) return null;
+  if (String(c.apiUrl).startsWith("YOUR_")) return null;
   return c;
 }
 
-/** POST x-www-form-urlencoded ke API buatqris.site, lintas platform. */
-async function postForm(fields) {
+/** POST JSON ke proxy QRIS, lintas platform (WebView / Tauri / web). */
+async function postJson(path, payload) {
   const cfg = getConfig();
-  const url = (cfg && cfg.apiUrl) || API_URL_FALLBACK;
-  const body = new URLSearchParams({
-    account_id: cfg?.accountId || "",
-    secret_token: cfg?.secretToken || "",
-    ...fields,
-  }).toString();
-  const headers = { "Content-Type": "application/x-www-form-urlencoded" };
+  const base = String(cfg.apiUrl).replace(/\/+$/, "");
+  const url = `${base}${path}`;
+  const body = JSON.stringify(payload);
+  const headers = { "Content-Type": "application/json" };
 
   let raw;
   if (CapacitorHttp) {
@@ -139,8 +136,7 @@ function startPolling(txId) {
   const tick = async () => {
     if (!currentTx || overlay?.classList.contains("hidden")) return;
     try {
-      const res = await postForm({
-        action: "api_check_status",
+      const res = await postJson("/status", {
         transaction_id: currentTx,
       });
       const st = res?.data?.status;
@@ -186,12 +182,9 @@ async function generate() {
   stopPolling();
 
   try {
-    const res = await postForm({
-      action: "api_create_qris",
-      amount: String(amount),
+    const res = await postJson("/create", {
+      amount,
       description: (descInput?.value || "Donasi Shiro").slice(0, 60),
-      qris_method: getConfig()?.qrisMethod || "qris_two",
-      fee_by: getConfig()?.feeBy || "user",
     });
     if (res?.success && res?.data?.transaction_id) {
       clearStatus();

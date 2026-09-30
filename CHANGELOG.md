@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.4.2] - 2026-09-30
+
+### Changed
+
+- **Donation moved behind a server proxy**: the app no longer calls `api.buatqris.site` directly. It now posts to `https://www.api-shiro.my.id/qris/create` and `/qris/status`, served by a small Express proxy on the maintainer's server.
+- **Token removed from the app**: `account_id` / `secret_token` now live only in `/var/www/qris-proxy/.env` on the server. `public/js/config/qris-config.js` is committed and holds nothing but the proxy URL, so no payment secret is embedded in the APK, IPA or desktop binaries anymore.
+- **CI**: the `BQ_ACCOUNT_ID` / `BQ_SECRET_TOKEN` injection step was removed from all three workflows — builds need no repository secrets.
+
+### Added
+
+- **Proxy hardening**: per-IP rate limits (15 QR creations and 300 status checks per 10 minutes), amount validation (Rp1.000 – Rp10.000.000), transaction-id format validation, note sanitising, a 20s upstream timeout and a response whitelist so only the fields the app needs are ever sent out.
+- **Operations**: `qris-proxy.service` (systemd, runs as `www-data`, auto-restart) behind an nginx `location ^~ /qris/` block on `www.api-shiro.my.id`, with CORS enabled for WebView, Tauri and web builds.
+
+### Notes
+
+- Builds up to v4.4.1 embedded the buatqris.site token inside the shipped binaries. If any of those were distributed, **rotate the secret token** in the buatqris.site dashboard and update `/var/www/qris-proxy/.env`.
+
+---
+
 ## [4.4.1] - 2026-09-30
 
 ### Added

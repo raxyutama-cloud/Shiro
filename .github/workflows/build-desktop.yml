@@ -42,24 +42,6 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci || npm install
 
-      - name: Inject QRIS donation config (from secrets)
-        shell: bash
-        env:
-          BQ_ACCOUNT_ID: ${{ secrets.BQ_ACCOUNT_ID }}
-          BQ_SECRET_TOKEN: ${{ secrets.BQ_SECRET_TOKEN }}
-        run: |
-          mkdir -p public/js/config
-          cat > public/js/config/qris-config.js <<EOF
-          window.__SHIRO_QRIS__ = {
-            apiUrl: "https://api.buatqris.site",
-            accountId: "${BQ_ACCOUNT_ID}",
-            secretToken: "${BQ_SECRET_TOKEN}",
-            qrisMethod: "qris_two",
-            feeBy: "user",
-          };
-          EOF
-          test -n "${BQ_ACCOUNT_ID}" && test -n "${BQ_SECRET_TOKEN}" && echo "QRIS config injected"
-
       - name: Build Tauri App
         run: npx tauri build
 

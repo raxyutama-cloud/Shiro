@@ -386,8 +386,8 @@ window.addEventListener("shiro_file_saved", async (e) => {
               localThumbnail: localThumbnail,
               thumbnail: keepOriginalThumb,
               thumbVersion: 3,
-              versionCode: 21,
-              versionName: "4.4.1",
+              versionCode: 22,
+              versionName: "4.4.2",
               thumbRepaired: true,
             };
           }
