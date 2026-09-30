@@ -9,7 +9,7 @@ export function setUtilsState(state) {
 }
 
 export function autoClearInputBox() {
-  if (localStorage.getItem("mori_auto_clear_input") === "true") {
+  if (localStorage.getItem("shiro_auto_clear_input") === "true") {
     const urlInput = document.getElementById("urlInput");
     const batchUrlInput = document.getElementById("batchUrlInput");
     const clearBtn = document.getElementById("clearBtn");
@@ -46,7 +46,7 @@ export async function showToast(message) {
     toastEl.classList.add("show");
   });
 
-  const durSec = parseInt(localStorage.getItem("mori_toast_dur") || "3", 10);
+  const durSec = parseInt(localStorage.getItem("shiro_toast_dur") || "3", 10);
   const durMs = durSec * 1000;
   setTimeout(() => {
     toastEl.classList.remove("show");

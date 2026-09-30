@@ -7,7 +7,7 @@ import {
 import { translations } from "../i18n/index.js";
 
 /**
- * Creates a custom video player element with all MoriPlayer controls.
+ * Creates a custom video player element with all ShiroPlayer controls.
  * @param {Object} dl - Download item with url, type, thumbnail properties.
  * @param {number} index - Slide index (0-based).
  * @param {string} resultThumbnail - Fallback thumbnail URL.
@@ -16,7 +16,7 @@ import { translations } from "../i18n/index.js";
 
 export function createVideoPlayer(dl, index, resultThumbnail) {
   const playerContainer = document.createElement("div");
-  playerContainer.className = "mori-player-container";
+  playerContainer.className = "shiro-player-container";
   playerContainer.style.backgroundColor = "black";
   playerContainer.style.display = "flex";
   playerContainer.style.alignItems = "center";
@@ -102,7 +102,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     if (fallbackImg) fallbackImg.remove();
   };
   const removeLoading = () => {
-    playerContainer.classList.remove("mori-loading");
+    playerContainer.classList.remove("shiro-loading");
     removeFallbackImg();
   };
 
@@ -135,9 +135,9 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
 
   const tryAutoPlay = () => {
     if (video._isStopped || userPaused) return;
-    const isAutoPlay = localStorage.getItem("mori_autoplay") !== "false";
+    const isAutoPlay = localStorage.getItem("shiro_autoplay") !== "false";
     if (isAutoPlay && isSlideActive() && video.paused) {
-      video.loop = localStorage.getItem("mori_loop") !== "false";
+      video.loop = localStorage.getItem("shiro_loop") !== "false";
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
@@ -168,7 +168,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   };
 
   if (isLocal && (isNative || tauriConvertFileSrc || tauriInvoke)) {
-    playerContainer.classList.add("mori-loading");
+    playerContainer.classList.add("shiro-loading");
     let cleanPath = dl.rawUri || videoUrl || dl.rawPath || "";
 
     if (cleanPath.startsWith("content://")) {
@@ -259,7 +259,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   }
 
   if (needsBypass) {
-    playerContainer.classList.add("mori-loading");
+    playerContainer.classList.add("shiro-loading");
 
     let referer = "https://www.google.com/";
     let ua =
@@ -348,10 +348,10 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     video.src = videoUrl;
   }
 
-  const loopSetting = localStorage.getItem("mori_loop") !== "false";
+  const loopSetting = localStorage.getItem("shiro_loop") !== "false";
   video.loop = loopSetting;
   video.preload = index === 0 ? "auto" : "metadata";
-  const autoPlaySetting = localStorage.getItem("mori_autoplay") !== "false";
+  const autoPlaySetting = localStorage.getItem("shiro_autoplay") !== "false";
   video.autoplay = false;
   video.playsInline = true;
   video.setAttribute("playsinline", "true");
@@ -384,11 +384,11 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     video.poster = posterThumb;
   }
 
-  playerContainer.classList.add("mori-loading");
+  playerContainer.classList.add("shiro-loading");
 
   video.onwaiting = () => {
     if (isTransitioningFs || isDragging) return;
-    playerContainer.classList.add("mori-loading");
+    playerContainer.classList.add("shiro-loading");
   };
   video.onseeked = removeLoading;
   video.onplaying = removeLoading;
@@ -541,15 +541,15 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
 
     removeLoading();
     if (bigPlay && bigPlay.parentNode) bigPlay.remove();
-    const ctrlEl = playerContainer.querySelector(".mori-player-controls");
+    const ctrlEl = playerContainer.querySelector(".shiro-player-controls");
     if (ctrlEl) ctrlEl.remove();
 
     playerContainer.dispatchEvent(
-      new CustomEvent("mori_media_load_error", { bubbles: true }),
+      new CustomEvent("shiro_media_load_error", { bubbles: true }),
     );
 
     if (
-      !playerContainer.querySelector(".mori-player-error") &&
+      !playerContainer.querySelector(".shiro-player-error") &&
       !playerContainer.querySelector(".fallback-img")
     ) {
       const fallbackSrc = posterThumb || dl.thumbnail || resultThumbnail || "";
@@ -567,14 +567,14 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
           fbImg.style.cursor = "pointer";
           const openTarget = () => {
             const targetPath = dl.rawPath || dl.rawUri || videoUrl;
-            if (window.MoriMainBridge?.openFile) {
-              window.MoriMainBridge.openFile(targetPath);
+            if (window.ShiroMainBridge?.openFile) {
+              window.ShiroMainBridge.openFile(targetPath);
             }
           };
           fbImg.onclick = openTarget;
 
           const playBadge = document.createElement("div");
-          playBadge.className = "mori-player-external-play";
+          playBadge.className = "shiro-player-external-play";
           playBadge.innerHTML = `
             <svg viewBox="0 0 24 24" width="48" height="48" fill="white" style="filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));">
               <path d="M8 5v14l11-7z"/>
@@ -597,7 +597,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
         playerContainer.appendChild(fbImg);
       } else {
         const errOverlay = document.createElement("div");
-        errOverlay.className = "mori-player-error";
+        errOverlay.className = "shiro-player-error";
         errOverlay.style.position = "absolute";
         errOverlay.style.top = "0";
         errOverlay.style.left = "0";
@@ -628,25 +628,25 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   playerContainer.appendChild(video);
 
   const bigPlay = document.createElement("div");
-  bigPlay.className = "mori-player-big-play visible";
+  bigPlay.className = "shiro-player-big-play visible";
   bigPlay.style.cursor = "pointer";
   bigPlay.innerHTML = `<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
   playerContainer.appendChild(bigPlay);
 
   const controls = document.createElement("div");
-  controls.className = "mori-player-controls";
+  controls.className = "shiro-player-controls";
   controls.innerHTML = `
-    <div class="mori-player-bar">
-      <button class="mori-player-btn play-toggle" title="Play/Pause">
+    <div class="shiro-player-bar">
+      <button class="shiro-player-btn play-toggle" title="Play/Pause">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" class="pause-icon hidden"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
-      <span class="mori-player-cur">0:00</span>
-      <div class="mori-player-progress">
-        <div class="mori-player-progress-inner"></div>
+      <span class="shiro-player-cur">0:00</span>
+      <div class="shiro-player-progress">
+        <div class="shiro-player-progress-inner"></div>
       </div>
-      <span class="mori-player-dur">0:00</span>
-      <button class="mori-player-btn action-right-btn" title="Fullscreen">
+      <span class="shiro-player-dur">0:00</span>
+      <button class="shiro-player-btn action-right-btn" title="Fullscreen">
         <svg class="fs-enter-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
         <svg class="unmute-icon hidden" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
         <svg class="mute-icon hidden" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.58.45-1.24.8-1.95.99v2.06c1.26-.26 2.4-.83 3.37-1.62l3.06 3.06L21 21.73l-16.73-16.73zM12 4L9.91 6.09 12 8.18V4z"/></svg>
@@ -657,14 +657,14 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
 
   // Fullscreen top header: Title on the left, Close button on the right
   const fsTop = document.createElement("div");
-  fsTop.className = "mori-player-fs-top";
+  fsTop.className = "shiro-player-fs-top";
 
   const fsTitle = document.createElement("div");
-  fsTitle.className = "mori-player-fs-title";
+  fsTitle.className = "shiro-player-fs-title";
   fsTitle.textContent = dl.title || dl.filename || "";
 
   const fsCloseBtn = document.createElement("button");
-  fsCloseBtn.className = "mori-player-fs-close";
+  fsCloseBtn.className = "shiro-player-fs-close";
   fsCloseBtn.title = "Close";
   fsCloseBtn.setAttribute("aria-label", "Close fullscreen");
   fsCloseBtn.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`;
@@ -677,10 +677,10 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   const playBtn = controls.querySelector(".play-toggle");
   const playIcon = playBtn.querySelector(".play-icon");
   const pauseIcon = playBtn.querySelector(".pause-icon");
-  const curDisplay = controls.querySelector(".mori-player-cur");
-  const durDisplay = controls.querySelector(".mori-player-dur");
-  const prog = controls.querySelector(".mori-player-progress");
-  const progInner = controls.querySelector(".mori-player-progress-inner");
+  const curDisplay = controls.querySelector(".shiro-player-cur");
+  const durDisplay = controls.querySelector(".shiro-player-dur");
+  const prog = controls.querySelector(".shiro-player-progress");
+  const progInner = controls.querySelector(".shiro-player-progress-inner");
 
   const rightBtn = controls.querySelector(".action-right-btn");
   const fsEnterIcon = rightBtn?.querySelector(".fs-enter-icon");
@@ -689,7 +689,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
 
   const updateAudioIcons = () => {
     if (!rightBtn) return;
-    if (playerContainer.classList.contains("mori-fullscreen")) {
+    if (playerContainer.classList.contains("shiro-fullscreen")) {
       fsEnterIcon?.classList.add("hidden");
       rightBtn.title = video.muted ? "Unmute" : "Mute";
       if (video.muted) {
@@ -708,7 +708,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   };
 
   const handleKeydown = (e) => {
-    if (!playerContainer.classList.contains("mori-fullscreen")) return;
+    if (!playerContainer.classList.contains("shiro-fullscreen")) return;
     if (e.key === "Escape") {
       exitCustomFullscreen();
     }
@@ -717,7 +717,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
 
   rightBtn.onclick = (e) => {
     e.stopPropagation();
-    if (playerContainer.classList.contains("mori-fullscreen")) {
+    if (playerContainer.classList.contains("shiro-fullscreen")) {
       video.muted = !video.muted;
       updateAudioIcons();
     } else {
@@ -729,7 +729,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   let fsPlaceholder = null;
 
   const enterCustomFullscreen = () => {
-    if (playerContainer.classList.contains("mori-fullscreen")) return;
+    if (playerContainer.classList.contains("shiro-fullscreen")) return;
 
     isTransitioningFs = true;
     setTimeout(() => {
@@ -737,7 +737,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     }, 400);
 
     fsPlaceholder = document.createElement("div");
-    fsPlaceholder.className = "mori-player-fs-placeholder";
+    fsPlaceholder.className = "shiro-player-fs-placeholder";
     fsPlaceholder.style.display = "none";
     if (playerContainer.parentNode) {
       playerContainer.parentNode.insertBefore(fsPlaceholder, playerContainer);
@@ -747,9 +747,9 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     const curTime = video.currentTime;
 
     document.body.appendChild(playerContainer);
-    playerContainer.classList.add("mori-fullscreen");
+    playerContainer.classList.add("shiro-fullscreen");
     updateAudioIcons();
-    document.body.classList.add("mori-has-fullscreen");
+    document.body.classList.add("shiro-has-fullscreen");
 
     StatusBar?.hide?.().catch?.(() => {});
 
@@ -771,16 +771,16 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
   };
 
   const exitCustomFullscreen = () => {
-    if (!playerContainer.classList.contains("mori-fullscreen")) return;
+    if (!playerContainer.classList.contains("shiro-fullscreen")) return;
 
     isTransitioningFs = true;
     setTimeout(() => {
       isTransitioningFs = false;
     }, 400);
 
-    playerContainer.classList.remove("mori-fullscreen");
+    playerContainer.classList.remove("shiro-fullscreen");
     updateAudioIcons();
-    document.body.classList.remove("mori-has-fullscreen");
+    document.body.classList.remove("shiro-has-fullscreen");
 
     StatusBar?.show?.().catch?.(() => {});
 
@@ -844,7 +844,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
     if (e) e.stopPropagation();
     if (video.paused) {
       userPaused = false;
-      video.loop = localStorage.getItem("mori_loop") !== "false";
+      video.loop = localStorage.getItem("shiro_loop") !== "false";
       video.play().catch((err) => {
         console.warn("video.play() failed:", err);
       });
@@ -1001,7 +1001,7 @@ export function createVideoPlayer(dl, index, resultThumbnail) {
 
   // Return cleanup function to remove window listeners when player is destroyed
   playerContainer._cleanup = () => {
-    if (playerContainer.classList.contains("mori-fullscreen")) {
+    if (playerContainer.classList.contains("shiro-fullscreen")) {
       exitCustomFullscreen();
     }
     window.removeEventListener("keydown", handleKeydown);

@@ -1,9 +1,27 @@
 # Changelog
 
-All notable changes to **Mori** will be documented in this file.
+All notable changes to **Shiro** will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [4.4.0] - 2026-09-30
+
+### Changed
+
+- **Rebrand**: Application renamed from **Mori** to **Shiro** across the UI, app name, download folders (`/Download/Shiro`), themes, CSS classes, storage keys, and all 9 languages.
+- **Maintainer**: Developer credits updated to **Raxy Utama** — GitHub `raxyutama-cloud`, Instagram `@yudhhaa23`, email `raxy.utama@gmail.com`.
+- **Report a Bug**: now opens the Shiro GitHub issue tracker with device info prefilled (previously WhatsApp to the original developer).
+- **Share & Updates**: share text, update checks, repository links, badges, and landing-page links now point to `raxyutama-cloud/Shiro`.
+- **Support**: the "Support Me" entry now opens the **Shiro api QRIS** code (also shown in README and on the landing page) instead of Sociabuzz.
+- **Version**: bumped to 4.4.0 (`versionCode` 20 on Android).
+
+### Notes
+
+- The application identifier remains `com.mori.downloader`: the bundled native security libraries (`libmorisec.so`, `morisec.obj`, `libmorisec.a`, `mori_get_engine_key`) export symbols bound to that package name, so changing it would break the scraper runtime.
+- Shiro is an independent, rebranded derivative of [Mori](https://github.com/coflyn/Mori) by coflyn, distributed under GPL-3.0.
 
 ---
 
@@ -82,7 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Playlist & Batch Downloads**: Fixed progress toast desync and race conditions during multi-item downloads.
 - **Filename Sanitization**: Resolved Android `EACCES`/`ENOENT` file path errors caused by special Unicode characters or oversized post titles.
-- **iOS Local Media**: Resolved WKWebView local media file URI playback in MoriPlayer.
+- **iOS Local Media**: Resolved WKWebView local media file URI playback in ShiroPlayer.
 - **Scrapers**: Fixed YouTube Shorts extraction and Facebook audio streaming.
 - **Twitter & Spotify**: Fixed video download streams and improved media gallery indexing.
 - **Desktop (Tauri)**: Fixed crash on rapid sequential downloads and corrected Unicode preview rendering.
@@ -175,7 +193,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Desktop Support (macOS & Windows)**: Powered by Tauri with native Rust binary helpers (`tauri_fetch_bytes`, `tauri_save_bytes_file`).
 - **External URL Handling**: Native browser opener (`tauri_open_url`) for documentation, bug reports, and GitHub repository links in default browsers.
 - **Smart Update Checker**: Semver version comparison (`isNewerVersion`) preventing redundant update prompts when app is up-to-date.
-- **Desktop PDF Gallery Export**: Direct export of scraped photo sets into `~/Downloads/Mori`.
+- **Desktop PDF Gallery Export**: Direct export of scraped photo sets into `~/Downloads/Shiro`.
 - **Standardized Filename Templates**: Streamlined filename options ("Title Only" set as default).
 
 ### Fixed
@@ -407,7 +425,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed redundant toast notifications on Android 13+.
 - Filtered external logos and site assets from Instagram thumbnail previews.
-- Unified all export paths into `Download/Mori`.
+- Unified all export paths into `Download/Shiro`.
 
 ---
 
@@ -415,7 +433,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **MoriPlayer**: Custom-built media player engine with double-tap seeking and smart gesture controls.
+- **ShiroPlayer**: Custom-built media player engine with double-tap seeking and smart gesture controls.
 - **Native Gesture Navigation**: Fluid swipe gestures to switch between Home, History, and Settings.
 - **Music UI**: Vertical stacking layout with thumbnail display in History modal.
 - **Interactive Tactility**: Interactive shadow animations on supported platform chips.
@@ -465,6 +483,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-Developed with ❤️ by coflyn.  
-GitHub: https://github.com/coflyn  
-Instagram: @\_coflyn
+Developed with ❤️ by Raxy Utama.  
+GitHub: https://github.com/raxyutama-cloud  
+Instagram: @\_yudhhaa23

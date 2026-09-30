@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="assets/icon.png" width="128" alt="Mori Logo">
+  <img src="assets/icon.png" width="128" alt="Shiro Logo">
 </p>
 
-<h1 align="center">Mori</h1>
+<h1 align="center">Shiro</h1>
 <p align="center"><em><strong>Save anything, From anywhere.</strong></em></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-v4.3.3-brown?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/github/downloads/coflyn/Mori/total?style=flat-square&color=blue" alt="Downloads">
-  <img src="https://img.shields.io/github/stars/coflyn/Mori?style=flat-square&color=gold" alt="Stars">
-  <img src="https://img.shields.io/github/repo-size/coflyn/Mori?style=flat-square&color=purple" alt="Repo Size">
+  <img src="https://img.shields.io/badge/Version-v4.4.0-brown?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/github/downloads/raxyutama-cloud/Shiro/total?style=flat-square&color=blue" alt="Downloads">
+  <img src="https://img.shields.io/github/stars/raxyutama-cloud/Shiro?style=flat-square&color=gold" alt="Stars">
+  <img src="https://img.shields.io/github/repo-size/raxyutama-cloud/Shiro?style=flat-square&color=purple" alt="Repo Size">
   <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Windows-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
 </p>
@@ -18,8 +18,10 @@
 
 Save and download videos, photos, and music from 16 platforms. No watermarks. No accounts. No tracking. Everything stays on your device.
 
-<a href="https://sociabuzz.com/coflyn/tribe" target="_blank">
-  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" />
+> **Note:** Shiro is a rebranded derivative of [Mori](https://github.com/coflyn/Mori) by **coflyn**, now maintained by **Raxy Utama**.
+
+<a href="assets/qris-shiro.jpeg" target="_blank">
+  <img src="assets/qris-shiro.jpeg" alt="Dukung Shiro via QRIS" height="240" />
 </a>
 
 </div>
@@ -55,22 +57,22 @@ Save and download videos, photos, and music from 16 platforms. No watermarks. No
 
 ## 🚀 How to Use
 
-Saving media with Mori takes only three simple steps:
+Saving media with Shiro takes only three simple steps:
 
 1. **Copy Link**: Copy any video, photo, or music link from your favorite app (TikTok, Instagram, YouTube, Spotify, etc.).
-2. **Open Mori**: Mori automatically detects the link from your clipboard and analyzes it right away. _(On Android, you can also just tap **Share** on any post and choose **Mori** to download directly without leaving the app!)_
+2. **Open Shiro**: Shiro automatically detects the link from your clipboard and analyzes it right away. _(On Android, you can also just tap **Share** on any post and choose **Shiro** to download directly without leaving the app!)_
 3. **Download**: Pick your preferred quality (HD video without watermarks, audio MP3, or photo gallery) and tap **Download**. Your media is saved straight to your device's gallery or music folder.
 
 ## 📥 Download & Installation
 
-Pre-compiled, ready-to-use packages are available for all devices on **[GitHub Releases](https://github.com/coflyn/Mori/releases)**.
+Pre-compiled, ready-to-use packages are available for all devices on **[GitHub Releases](https://github.com/raxyutama-cloud/Shiro/releases)**.
 
 | Platform                                                                                                                        | Available Packages                                                | Installation Guide                                                                  |
 | :------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
-| <img src="https://cdn.simpleicons.org/android/3DDC84" width="16" /> **Android**                                                 | `Mori v...apk`                                                    | [Installation & Play Protect Guide](GUIDE.md#android-installation--troubleshooting) |
-| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **macOS**                                                     | `Mori-v...-macOS-arm64.dmg`<br>`Mori-v...-macOS-arm64.app.tar.gz` | [Gatekeeper Quarantine Fix](GUIDE.md#macos-installation--gatekeeper-fix)            |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows11/windows11-original.svg" width="16" /> **Windows** | `Mori-v...-Windows-x64-Setup.exe`<br>`Mori-v...-Windows-x64.msi`  | [Windows Setup Guide](GUIDE.md#windows-installation)                                |
-| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **iOS**                                                       | `Mori v...ipa`                                                    | [AltStore / TrollStore Sideloading](GUIDE.md#ios-sideloading-guide)                 |
+| <img src="https://cdn.simpleicons.org/android/3DDC84" width="16" /> **Android**                                                 | `Shiro v...apk`                                                    | [Installation & Play Protect Guide](GUIDE.md#android-installation--troubleshooting) |
+| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **macOS**                                                     | `Shiro-v...-macOS-arm64.dmg`<br>`Shiro-v...-macOS-arm64.app.tar.gz` | [Gatekeeper Quarantine Fix](GUIDE.md#macos-installation--gatekeeper-fix)            |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows11/windows11-original.svg" width="16" /> **Windows** | `Shiro-v...-Windows-x64-Setup.exe`<br>`Shiro-v...-Windows-x64.msi`  | [Windows Setup Guide](GUIDE.md#windows-installation)                                |
+| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **iOS**                                                       | `Shiro v...ipa`                                                    | [AltStore / TrollStore Sideloading](GUIDE.md#ios-sideloading-guide)                 |
 
 > 📖 **Need help installing or troubleshooting?**  
 > Read the complete **[Installation, Sideloading & User Guide (GUIDE.md)](GUIDE.md)**.
@@ -78,18 +80,18 @@ Pre-compiled, ready-to-use packages are available for all devices on **[GitHub R
 ## 📜 Features
 
 - **16 Platforms in One App**: Save watermark-free videos, high-resolution photos, and audio from TikTok, Instagram, YouTube, Twitter/X, Spotify, Apple Music, Pinterest, Facebook, Threads, Bandcamp, Pixiv, Bilibili, Douyin, RedNote, Reddit, and TeraBox.
-- **Over-The-Air (OTA) Scraper Hot-Patching**: Never wait for app updates when a platform changes its API. Mori seamlessly hot-patches scraper engines in the background without needing to reinstall the app.
+- **Over-The-Air (OTA) Scraper Hot-Patching**: Never wait for app updates when a platform changes its API. Shiro seamlessly hot-patches scraper engines in the background without needing to reinstall the app.
 - **Custom Directory & Storage Freedom**: Pick any folder across your device storage (including SD cards, Movies, Downloads, and custom folders) with native folder pickers and full file management support.
 - **One-Tap Playlists & Albums**: Download full music albums or playlists from **Spotify**, **Apple Music**, and **YouTube** in one click instead of saving songs one by one.
 - **High-Speed Concurrent Downloads**: Download music albums, playlists, and multi-photo galleries in parallel with up to 5 concurrent worker threads for blazing fast speeds.
 - **Floating Download Bubble & Manager**: Non-intrusive monochrome floating bubble tracking active tasks in real-time with an aggregated progress ring, expandable dropup tray, individual task progress bars, and instant cancellation.
-- **Quick Save via Android Share Menu**: Spot a video you love? Tap **Share** in any app and select Mori to download it instantly in a neat overlay without switching apps.
-- **Multi-Link Batch Mode**: Paste several links at once and let Mori queue and download them all automatically in the background.
+- **Quick Save via Android Share Menu**: Spot a video you love? Tap **Share** in any app and select Shiro to download it instantly in a neat overlay without switching apps.
+- **Multi-Link Batch Mode**: Paste several links at once and let Shiro queue and download them all automatically in the background.
 - **Built-in Media Player & Preview**: Play videos, stream tracks, and browse photo carousels right inside the app before or after downloading.
 - **Instant Photo-to-PDF**: Combine photo galleries or multi-image posts into a single, clean PDF file for offline reading or sharing.
 - **PIN & Biometric Lock**: Protect your download history with an optional 4-digit PIN code or fingerprint / Face ID lock.
-- **Clean Folder Organization**: Files are neatly organized in standard system folders (`Movies/Mori`, `Music/Mori`, `Pictures/Mori`) for easy access in your gallery.
-- **Automatic Clipboard Detection**: Opening Mori automatically suggests your copied link for instant one-tap downloading.
+- **Clean Folder Organization**: Files are neatly organized in standard system folders (`Movies/Shiro`, `Music/Shiro`, `Pictures/Shiro`) for easy access in your gallery.
+- **Automatic Clipboard Detection**: Opening Shiro automatically suggests your copied link for instant one-tap downloading.
 - **Background Downloads**: Large videos and playlists keep downloading seamlessly even when you minimize the app or turn off the screen.
 - **Anti-Corrupt File Protection**: Files are saved securely—media only appears in your gallery once 100% complete, preventing broken or unplayable files.
 - **Modern Themes & Live Backgrounds**: Choose from elegant dark modes and interactive animated backgrounds (Stars, Waves, Fireflies).
@@ -140,7 +142,7 @@ Interested in customizing the interface, contributing translations, or compiling
 ### Project Structure
 
 ```
-Mori/
+Shiro/
 ├── android/                    # Capacitor Android native project
 │   ├── app/src/main/
 │   │   ├── java/com/mori/downloader/
@@ -237,29 +239,30 @@ Mori/
 
 ## 🔧 Scraper Architecture
 
-Mori's scraper core is bundled via esbuild into `public/js/scrapers/bundle.js` — a plain minified IIFE containing all 16 platform scrapers. The scraper source lives in `src-scrapers/` (private, not committed to the public repo).
+Shiro's scraper core is bundled via esbuild into `public/js/scrapers/bundle.js` — a plain minified IIFE containing all 16 platform scrapers. The scraper source lives in `src-scrapers/` (private, not committed to the public repo).
 
-- **OTA Hot-Patching**: When a platform changes its API, Mori can silently download and apply an updated `bundle.js` from GitHub without requiring a full app update.
+- **OTA Hot-Patching**: When a platform changes its API, Shiro can silently download and apply an updated `bundle.js` from GitHub without requiring a full app update.
 - **Open Client Architecture**: The entire frontend, UI design system, and core app logic remain **100% open source under GPL-3.0**.
 - **Collaborative Development**: Honest developers who want to improve scrapers or fix broken endpoints are always welcome to coordinate through [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 ## ⚖️ Disclaimer
 
-- **Personal & Educational Use Only**: Mori is an open-source educational utility designed solely for personal media archiving and research. Users are solely responsible for complying with local copyright laws and the terms of service of source platforms.
-- **Zero Media Hosting**: Mori does not host, stream, cache, or redistribute any media on external servers. All operations execute strictly on-demand directly on the user's local device.
-- **Respect for Third-Party Providers**: Mori acts purely as a client-side wrapper querying publicly available web endpoints. If you are an operator or developer of an upstream service and wish to have your endpoint excluded or removed from Mori, please reach out via GitHub Issues or email (riazrepo@gmail.com), and we will promptly accommodate your request.
+- **Personal & Educational Use Only**: Shiro is an open-source educational utility designed solely for personal media archiving and research. Users are solely responsible for complying with local copyright laws and the terms of service of source platforms.
+- **Zero Media Hosting**: Shiro does not host, stream, cache, or redistribute any media on external servers. All operations execute strictly on-demand directly on the user's local device.
+- **Respect for Third-Party Providers**: Shiro acts purely as a client-side wrapper querying publicly available web endpoints. If you are an operator or developer of an upstream service and wish to have your endpoint excluded or removed from Shiro, please reach out via GitHub Issues or email (riazrepo@gmail.com), and we will promptly accommodate your request.
 
 ## 📄 License & Terms of Use
 
-Mori is free and open-source software licensed under the **[GNU General Public License v3.0 (GPL-3.0)](LICENSE)**.
+Shiro is free and open-source software licensed under the **[GNU General Public License v3.0 (GPL-3.0)](LICENSE)**.
 
 - **Copyleft Enforcement**: Anyone who modifies or distributes copies of this software is strictly required to provide the complete corresponding source code under the same GPL-3.0 license.
-- **No Unauthorized Commercial Re-selling**: Packaging, rebranding, or distributing closed-source, paid, or monetized variants of Mori without honoring GPL-3.0 requirements violates copyright law and will be subject to official DMCA takedowns.
-- **Trademark & Identity**: The name "Mori", app logo, and associated visual designs are the property of the original author. Derivative works must be clearly distinguished and must not claim affiliation with the original project.
+- **No Unauthorized Commercial Re-selling**: Packaging, rebranding, or distributing closed-source, paid, or monetized variants of Shiro without honoring GPL-3.0 requirements violates copyright law and will be subject to official DMCA takedowns.
+- **Trademark & Identity**: Shiro is an independent, rebranded derivative of the original **Mori** project (https://github.com/coflyn/Mori). The name "Mori", the original logo, and the associated visual designs remain the property of the original author. Shiro must be clearly distinguished from it and must not claim affiliation with the original project.
 
 ---
 
-Developed with ❤️ by coflyn.  
-GitHub: https://github.com/coflyn  
-Instagram: @\_coflyn
+Developed with ❤️ by Raxy Utama.  
+GitHub: https://github.com/raxyutama-cloud  
+Instagram: @\_yudhhaa23  
+Email: raxy.utama@gmail.com

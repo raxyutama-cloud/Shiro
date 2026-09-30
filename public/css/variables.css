@@ -205,7 +205,7 @@ body.corner-sharp .action-btn,
 body.corner-sharp .modal-content,
 body.corner-sharp .confirm-modal,
 body.corner-sharp .path-display-pill,
-body.corner-sharp .mori-input-with-icon,
+body.corner-sharp .shiro-input-with-icon,
 body.corner-sharp .bg-shape-card,
 body.corner-sharp .result-card,
 body.corner-sharp .history-item {
@@ -242,7 +242,7 @@ body.corner-round .confirm-modal {
   border-radius: 24px !important;
 }
 body.corner-round .path-display-pill,
-body.corner-round .mori-input-with-icon,
+body.corner-round .shiro-input-with-icon,
 body.corner-round .bg-shape-card,
 body.corner-round .result-card,
 body.corner-round .history-item {

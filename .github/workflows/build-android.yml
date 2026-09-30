@@ -1,0 +1,68 @@
+name: Build Android Release (APK)
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Build APK (debug + unsigned release)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug assembleRelease --no-daemon
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p dist-assets
+          VERSION=$(node -p "require('./package.json').version")
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             "dist-assets/Shiro-v${VERSION}-Android-debug.apk"
+          if [ -f android/app/build/outputs/apk/release/app-release-unsigned.apk ]; then
+            cp android/app/build/outputs/apk/release/app-release-unsigned.apk \
+               "dist-assets/Shiro-v${VERSION}-Android-unsigned.apk"
+          fi
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Shiro-Android-APK
+          path: dist-assets/*.apk
+
+      - name: Upload Release Asset (Android)
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist-assets/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

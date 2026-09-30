@@ -75,7 +75,7 @@ export function getCleanDirectoryPath(item, rawFile, itemType) {
       ));
 
   if (isPdf) {
-    return localStorage.getItem("mori_pdf_path") || "Download/Mori";
+    return localStorage.getItem("shiro_pdf_path") || "Download/Shiro";
   }
 
   const isAudio =
@@ -92,7 +92,7 @@ export function getCleanDirectoryPath(item, rawFile, itemType) {
         item.url.includes("music.apple")));
 
   if (isAudio) {
-    return localStorage.getItem("mori_music_path") || "Music/Mori";
+    return localStorage.getItem("shiro_music_path") || "Music/Shiro";
   }
 
   const isPhoto =
@@ -106,13 +106,13 @@ export function getCleanDirectoryPath(item, rawFile, itemType) {
     (item?.url && item.url.includes("pinterest"));
 
   if (isPhoto) {
-    return localStorage.getItem("mori_photo_path") || "Pictures/Mori";
+    return localStorage.getItem("shiro_photo_path") || "Pictures/Shiro";
   }
 
   return (
-    localStorage.getItem("mori_download_path") ||
-    localStorage.getItem("mori_video_path") ||
-    "Download/Mori"
+    localStorage.getItem("shiro_download_path") ||
+    localStorage.getItem("shiro_video_path") ||
+    "Download/Shiro"
   );
 }
 
@@ -121,7 +121,7 @@ let modalCurrentSlide = 0;
 export async function showModal(item, onRedownload) {
   try {
     if (!item) return;
-    window._moriIsModalOpen = true;
+    window._shiroIsModalOpen = true;
 
     const modalTitle = document.getElementById("modalTitle");
     const modalUrl = document.getElementById("modalUrl");
@@ -372,13 +372,13 @@ export async function showModal(item, onRedownload) {
         const isActive = i === modalCurrentSlide;
         s.classList.toggle("active", isActive);
         const media = s.querySelector("video, audio");
-        const playerContainer = s.querySelector(".mori-player-container");
+        const playerContainer = s.querySelector(".shiro-player-container");
         if (isActive) {
           if (playerContainer && typeof playerContainer._tryAutoPlay === "function") {
             playerContainer._tryAutoPlay();
           } else if (media) {
-            media.loop = localStorage.getItem("mori_loop") !== "false";
-            if (localStorage.getItem("mori_autoplay") !== "false") {
+            media.loop = localStorage.getItem("shiro_loop") !== "false";
+            if (localStorage.getItem("shiro_autoplay") !== "false") {
               if (media.paused) {
                 const playPromise = media.play();
                 if (playPromise !== undefined) {
@@ -391,7 +391,7 @@ export async function showModal(item, onRedownload) {
                     ) {
                       console.warn("Unmuted autoplay restricted, attempting muted:", err);
                       media.muted = true;
-                      const pc = media.closest(".mori-player-container");
+                      const pc = media.closest(".shiro-player-container");
                       if (pc) {
                         const unmute = pc.querySelector(".unmute-icon");
                         const mute = pc.querySelector(".mute-icon");
@@ -467,8 +467,8 @@ export async function showModal(item, onRedownload) {
             const opened = await openNativeFolder(dirPath || rawPath);
             if (opened) return;
 
-            if (window.MoriMainBridge?.openFile) {
-              const fileOpened = window.MoriMainBridge.openFile(rawPath);
+            if (window.ShiroMainBridge?.openFile) {
+              const fileOpened = window.ShiroMainBridge.openFile(rawPath);
               if (fileOpened) return;
             }
           }
@@ -514,7 +514,7 @@ export async function showModal(item, onRedownload) {
         if (
           target.closest("input") ||
           target.closest("button") ||
-          target.closest(".mori-player-controls") ||
+          target.closest(".shiro-player-controls") ||
           target.closest(".custom-controls") ||
           target.closest(".player-control-btn") ||
           target.closest(".timeline-container") ||
@@ -567,7 +567,7 @@ export async function showModal(item, onRedownload) {
         true,
       );
       slidesWrapper.addEventListener(
-        "mori_media_load_error",
+        "shiro_media_load_error",
         showMissingStatus,
       );
       slidesWrapper.addEventListener("loadeddata", clearMissingStatus, true);
@@ -590,7 +590,7 @@ export async function showModal(item, onRedownload) {
     const modalFavBtn = document.getElementById("modalFavBtn");
     if (modalFavBtn) {
       let isFav = !!item.favorite;
-      const hist = JSON.parse(localStorage.getItem("mori_history") || "[]");
+      const hist = JSON.parse(localStorage.getItem("shiro_history") || "[]");
       const found = hist.find((h) => h.url === item.url);
       if (found) isFav = !!found.favorite;
 
@@ -606,8 +606,8 @@ export async function showModal(item, onRedownload) {
 
       modalFavBtn.onclick = (e) => {
         e.stopPropagation();
-        if (typeof window.toggleMoriFavorite === "function") {
-          const newFavState = window.toggleMoriFavorite(item.url);
+        if (typeof window.toggleShiroFavorite === "function") {
+          const newFavState = window.toggleShiroFavorite(item.url);
           updateFavUI(newFavState);
           item.favorite = newFavState;
         }
@@ -623,7 +623,7 @@ export async function showModal(item, onRedownload) {
           updateFavUI(e.detail.favorite);
         }
       };
-      window.addEventListener("mori_favorite_toggled", onFavSync, {
+      window.addEventListener("shiro_favorite_toggled", onFavSync, {
         once: true,
       });
     }
@@ -631,7 +631,7 @@ export async function showModal(item, onRedownload) {
     if (redownloadBtn) {
       redownloadBtn.onclick = (e) => {
         e.stopPropagation();
-        window._moriIsModalOpen = false;
+        window._shiroIsModalOpen = false;
         stopAllMedia(slidesWrapper);
         slidesWrapper.innerHTML = "";
         modalOverlay.classList.add("hidden");

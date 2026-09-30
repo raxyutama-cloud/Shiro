@@ -96,14 +96,14 @@ public class MainActivity extends BridgeActivity {
             try {
                 WebView webView = getBridge() != null ? getBridge().getWebView() : null;
                 if (webView != null) {
-                    String js = "if (window.__moriFolderCallback && window.__moriFolderCallback['" + callbackId + "']) { " +
-                                "  window.__moriFolderCallback['" + callbackId + "'](" + JSONObject.quote(path != null ? path : "") + "); " +
-                                "  delete window.__moriFolderCallback['" + callbackId + "']; " +
+                    String js = "if (window.__shiroFolderCallback && window.__shiroFolderCallback['" + callbackId + "']) { " +
+                                "  window.__shiroFolderCallback['" + callbackId + "'](" + JSONObject.quote(path != null ? path : "") + "); " +
+                                "  delete window.__shiroFolderCallback['" + callbackId + "']; " +
                                 "}";
                     webView.evaluateJavascript(js, null);
                 }
             } catch (Exception e) {
-                Log.e("MoriMain", "sendFolderCallback error: " + e.getMessage());
+                Log.e("ShiroMain", "sendFolderCallback error: " + e.getMessage());
             }
         });
     }
@@ -157,7 +157,7 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
-    public class MoriMainBridge {
+    public class ShiroMainBridge {
         @JavascriptInterface
         public String getEngineSecurityKey(String challenge) {
             try {
@@ -197,17 +197,17 @@ public class MainActivity extends BridgeActivity {
                     try {
                         WebView webView = getBridge() != null ? getBridge().getWebView() : null;
                         if (webView != null) {
-                            String js = "if (window.__moriNativeCallbacks && window.__moriNativeCallbacks['" + reqId + "']) { " +
-                                        "  window.__moriNativeCallbacks['" + reqId + "'](" + JSONObject.quote(finalResult) + "); " +
-                                        "  delete window.__moriNativeCallbacks['" + reqId + "']; " +
-                                        "} else if (window.__moriShareCallbacks && window.__moriShareCallbacks['" + reqId + "']) { " +
-                                        "  window.__moriShareCallbacks['" + reqId + "'](" + JSONObject.quote(finalResult) + "); " +
-                                        "  delete window.__moriShareCallbacks['" + reqId + "']; " +
+                            String js = "if (window.__shiroNativeCallbacks && window.__shiroNativeCallbacks['" + reqId + "']) { " +
+                                        "  window.__shiroNativeCallbacks['" + reqId + "'](" + JSONObject.quote(finalResult) + "); " +
+                                        "  delete window.__shiroNativeCallbacks['" + reqId + "']; " +
+                                        "} else if (window.__shiroShareCallbacks && window.__shiroShareCallbacks['" + reqId + "']) { " +
+                                        "  window.__shiroShareCallbacks['" + reqId + "'](" + JSONObject.quote(finalResult) + "); " +
+                                        "  delete window.__shiroShareCallbacks['" + reqId + "']; " +
                                         "}";
                             webView.evaluateJavascript(js, null);
                         }
                     } catch (Exception e) {
-                        Log.e("MoriMain", "httpRequestAsync callback error: " + e.getMessage());
+                        Log.e("ShiroMain", "httpRequestAsync callback error: " + e.getMessage());
                     }
                 });
             });
@@ -297,7 +297,7 @@ public class MainActivity extends BridgeActivity {
                 return result.toString();
 
             } catch (Throwable e) {
-                Log.e("MoriMain", "httpRequest error: " + e.getMessage());
+                Log.e("ShiroMain", "httpRequest error: " + e.getMessage());
                 String msg = e.getMessage() != null ? e.getMessage().replace("\"", "'") : e.getClass().getSimpleName();
                 return "{\"status\":0,\"data\":\"\",\"error\":\"" + msg + "\"}";
             }
@@ -307,7 +307,7 @@ public class MainActivity extends BridgeActivity {
         public String getPendingHistoryList() {
             try {
                 SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                return prefs.getString("mori_pending_share_history_list", "[]");
+                return prefs.getString("shiro_pending_share_history_list", "[]");
             } catch (Exception e) {
                 return "[]";
             }
@@ -317,7 +317,7 @@ public class MainActivity extends BridgeActivity {
         public void clearPendingHistoryList() {
             try {
                 SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                prefs.edit().remove("mori_pending_share_history_list").commit();
+                prefs.edit().remove("shiro_pending_share_history_list").commit();
             } catch (Exception ignored) {}
         }
 
@@ -362,10 +362,10 @@ public class MainActivity extends BridgeActivity {
                 if (nm == null) return;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     android.app.NotificationChannel ch = new android.app.NotificationChannel(
-                            "mori_download_complete", "Mori Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
+                            "shiro_download_complete", "Shiro Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
                     nm.createNotificationChannel(ch);
                 }
-                androidx.core.app.NotificationCompat.Builder b = new androidx.core.app.NotificationCompat.Builder(MainActivity.this, "mori_download_complete")
+                androidx.core.app.NotificationCompat.Builder b = new androidx.core.app.NotificationCompat.Builder(MainActivity.this, "shiro_download_complete")
                         .setSmallIcon(android.R.drawable.stat_sys_download_done)
                         .setContentTitle("Download Complete ✓")
                         .setContentText((title != null ? title : "Media") + (path != null ? " · " + path : ""))
@@ -384,10 +384,10 @@ public class MainActivity extends BridgeActivity {
                 if (nm == null) return;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     android.app.NotificationChannel ch = new android.app.NotificationChannel(
-                            "mori_download_complete", "Mori Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
+                            "shiro_download_complete", "Shiro Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
                     nm.createNotificationChannel(ch);
                 }
-                androidx.core.app.NotificationCompat.Builder b = new androidx.core.app.NotificationCompat.Builder(MainActivity.this, "mori_download_complete")
+                androidx.core.app.NotificationCompat.Builder b = new androidx.core.app.NotificationCompat.Builder(MainActivity.this, "shiro_download_complete")
                         .setSmallIcon(android.R.drawable.stat_notify_error)
                         .setContentTitle("Download Failed")
                         .setContentText((title != null ? title : "Media") + ": " + (error != null ? error : "Failed"))
@@ -443,7 +443,7 @@ public class MainActivity extends BridgeActivity {
                         new String[]{ f.getAbsolutePath() },
                         finalMime != null ? new String[]{ finalMime } : null,
                         (scannedPath, uri) -> {
-                            Log.d("MoriMainBridge", "MediaScanner indexed: " + scannedPath + " -> " + uri);
+                            Log.d("ShiroMainBridge", "MediaScanner indexed: " + scannedPath + " -> " + uri);
                         }
                     );
                 }
@@ -746,7 +746,7 @@ public class MainActivity extends BridgeActivity {
                         }, 102);
                     }
                 } catch (Exception e) {
-                    Log.e("MoriMain", "requestAllFilesPermission error: " + e.getMessage());
+                    Log.e("ShiroMain", "requestAllFilesPermission error: " + e.getMessage());
                 }
             });
         }
@@ -760,7 +760,7 @@ public class MainActivity extends BridgeActivity {
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                     startActivityForResult(intent, 201);
                 } catch (Exception e) {
-                    Log.e("MoriMain", "pickFolder error: " + e.getMessage());
+                    Log.e("ShiroMain", "pickFolder error: " + e.getMessage());
                     sendFolderCallback(callbackId, "");
                     pendingFolderCallbackId = null;
                 }
@@ -811,7 +811,7 @@ public class MainActivity extends BridgeActivity {
 
         WebView webView = getBridge().getWebView();
         if (webView != null) {
-            webView.addJavascriptInterface(new MoriMainBridge(), "MoriMainBridge");
+            webView.addJavascriptInterface(new ShiroMainBridge(), "ShiroMainBridge");
             WebSettings settings = webView.getSettings();
             settings.setAllowFileAccess(true);
             settings.setAllowContentAccess(true);
@@ -872,7 +872,7 @@ public class MainActivity extends BridgeActivity {
                 public void run() {
                     getBridge().getWebView().evaluateJavascript(
                         "if (typeof window.checkAndMergePendingHistory === 'function') window.checkAndMergePendingHistory();" +
-                        "window.dispatchEvent(new CustomEvent('mori_app_resumed'));", null);
+                        "window.dispatchEvent(new CustomEvent('shiro_app_resumed'));", null);
                 }
             }, 300);
         }
@@ -890,8 +890,8 @@ public class MainActivity extends BridgeActivity {
                     getBridge().getWebView().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            getBridge().getWebView().evaluateJavascript("window.moriShareText = '" + escapedText + "';", null);
-                            getBridge().triggerWindowJSEvent("moriShareIntent", "{ \"text\": \"" + escapedText + "\" }");
+                            getBridge().getWebView().evaluateJavascript("window.shiroShareText = '" + escapedText + "';", null);
+                            getBridge().triggerWindowJSEvent("shiroShareIntent", "{ \"text\": \"" + escapedText + "\" }");
                         }
                     }, 1000);
                 }

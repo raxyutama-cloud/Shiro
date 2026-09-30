@@ -1,5 +1,5 @@
 // Protected under GNU General Public License v3.0.
-// All rights reserved (C) 2026 coflyn.
+// All rights reserved (C) 2026 Raxy Utama.
 
 extern "C" {
     fn mori_get_engine_key(
@@ -23,6 +23,6 @@ pub fn get_key(challenge: &str) -> Result<String, String> {
         let hex_str = std::str::from_utf8(&buf[..64]).map_err(|e| e.to_string())?;
         Ok(hex_str.to_string())
     } else {
-        Err("Mori Engine: Native security verification failed in core library.".into())
+        Err("Shiro Engine: Native security verification failed in core library.".into())
     }
 }

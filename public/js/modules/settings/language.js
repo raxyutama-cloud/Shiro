@@ -34,29 +34,29 @@ export function setupCustomSelect(selectId, storageKey, textId, menuId) {
   if (!select || !text || !menu) return;
 
   const defaultFallback =
-    storageKey === "mori_prefer_server"
+    storageKey === "shiro_prefer_server"
       ? "ask"
-      : storageKey === "mori_font"
+      : storageKey === "shiro_font"
         ? "display"
-        : storageKey === "mori_anim_speed"
+        : storageKey === "shiro_anim_speed"
           ? "normal"
-          : storageKey === "mori_text_size"
+          : storageKey === "shiro_text_size"
             ? "medium"
-            : storageKey === "mori_glassmorphism"
+            : storageKey === "shiro_glassmorphism"
               ? "subtle"
-              : storageKey === "mori_ui_corner"
+              : storageKey === "shiro_ui_corner"
                 ? "modern"
-                : storageKey === "mori_sound_pack"
+                : storageKey === "shiro_sound_pack"
                   ? "chime"
-                  : storageKey === "mori_concurrent"
+                  : storageKey === "shiro_concurrent"
                     ? "1"
-                    : storageKey === "mori_overwrite"
+                    : storageKey === "shiro_overwrite"
                       ? "rename"
-                      : storageKey === "mori_max_retry"
+                      : storageKey === "shiro_max_retry"
                         ? "3"
-                        : storageKey === "mori_doh"
+                        : storageKey === "shiro_doh"
                           ? "off"
-                          : storageKey === "mori_toast_dur"
+                          : storageKey === "shiro_toast_dur"
                             ? "3"
                             : "default";
   const currentVal = localStorage.getItem(storageKey) || defaultFallback;
@@ -110,14 +110,14 @@ export function setupCustomSelect(selectId, storageKey, textId, menuId) {
       menu.classList.remove("open-up");
       select.closest(".settings-item")?.classList.remove("active-dropdown");
 
-      if (storageKey === "mori_accent") applyColorAccent();
-      if (storageKey === "mori_font") applyFont();
-      if (storageKey === "mori_lang") switchLanguage(val);
-      if (storageKey === "mori_anim_speed") applyAnimSpeed();
-      if (storageKey === "mori_text_size") applyTextSize();
-      if (storageKey === "mori_glassmorphism") applyGlassmorphism();
-      if (storageKey === "mori_ui_corner") applyUiCorner();
-      if (storageKey === "mori_sound_pack") previewSound(val);
+      if (storageKey === "shiro_accent") applyColorAccent();
+      if (storageKey === "shiro_font") applyFont();
+      if (storageKey === "shiro_lang") switchLanguage(val);
+      if (storageKey === "shiro_anim_speed") applyAnimSpeed();
+      if (storageKey === "shiro_text_size") applyTextSize();
+      if (storageKey === "shiro_glassmorphism") applyGlassmorphism();
+      if (storageKey === "shiro_ui_corner") applyUiCorner();
+      if (storageKey === "shiro_sound_pack") previewSound(val);
 
       const labelText =
         select.closest(".settings-item")?.querySelector(".settings-title span")
@@ -130,30 +130,30 @@ export function setupCustomSelect(selectId, storageKey, textId, menuId) {
 export function updateCustomSelectsUI() {
   const lang = translations[currentLang] || translations.en;
 
-  const currentFilename = localStorage.getItem("mori_filename") || "title";
+  const currentFilename = localStorage.getItem("shiro_filename") || "title";
   const filenameText = document.getElementById("filenameText");
   if (filenameText)
     filenameText.textContent =
       lang[`filename-${currentFilename}`] || currentFilename;
 
-  const currentUA = localStorage.getItem("mori_user_agent") || "default";
+  const currentUA = localStorage.getItem("shiro_user_agent") || "default";
   const userAgentText = document.getElementById("userAgentText");
   if (userAgentText)
     userAgentText.textContent = lang[`ua-${currentUA}`] || currentUA;
 
-  const currentTimeout = localStorage.getItem("mori_request_timeout") || "30";
+  const currentTimeout = localStorage.getItem("shiro_request_timeout") || "30";
   const requestTimeoutText = document.getElementById("requestTimeoutText");
   if (requestTimeoutText)
     requestTimeoutText.textContent =
       lang[`timeout-${currentTimeout}`] || `${currentTimeout}s`;
 
-  const currentServer = localStorage.getItem("mori_prefer_server") || "ask";
+  const currentServer = localStorage.getItem("shiro_prefer_server") || "ask";
   const preferServerText = document.getElementById("preferServerText");
   if (preferServerText)
     preferServerText.textContent =
       lang[`server-${currentServer}`] || currentServer;
 
-  const currentFont = localStorage.getItem("mori_font") || "display";
+  const currentFont = localStorage.getItem("shiro_font") || "display";
   const fontText = document.getElementById("fontText");
   if (fontText)
     fontText.textContent =
@@ -163,21 +163,21 @@ export function updateCustomSelectsUI() {
         : currentFont);
 
   const currentLimit =
-    localStorage.getItem("mori_history_limit") || "unlimited";
+    localStorage.getItem("shiro_history_limit") || "unlimited";
   const historyLimitText = document.getElementById("historyLimitText");
   if (historyLimitText)
     historyLimitText.textContent =
       lang[`history-${currentLimit}`] || currentLimit;
 
   const currentClearDays =
-    localStorage.getItem("mori_auto_clear_days") || "off";
+    localStorage.getItem("shiro_auto_clear_days") || "off";
   const autoClearDaysText = document.getElementById("autoClearDaysText");
   if (autoClearDaysText)
     autoClearDaysText.textContent =
       lang[`days-${currentClearDays}`] || currentClearDays;
 
   const currentCacheDays =
-    localStorage.getItem("mori_auto_clear_cache_days") || "off";
+    localStorage.getItem("shiro_auto_clear_cache_days") || "off";
   const autoClearCacheDaysText = document.getElementById(
     "autoClearCacheDaysText",
   );
@@ -185,19 +185,19 @@ export function updateCustomSelectsUI() {
     autoClearCacheDaysText.textContent =
       lang[`days-${currentCacheDays}`] || currentCacheDays;
 
-  const currentLock = localStorage.getItem("mori_lock_type") || "none";
+  const currentLock = localStorage.getItem("shiro_lock_type") || "none";
   const lockTypeText = document.getElementById("lockTypeText");
   if (lockTypeText)
     lockTypeText.textContent = lang[`lock-type-${currentLock}`] || currentLock;
 
   const currentBatchPhoto =
-    localStorage.getItem("mori_batch_photo_mode") || "all";
+    localStorage.getItem("shiro_batch_photo_mode") || "all";
   const batchPhotoModeText = document.getElementById("batchPhotoModeText");
   if (batchPhotoModeText)
     batchPhotoModeText.textContent =
       lang[`batch-photo-${currentBatchPhoto}`] || currentBatchPhoto;
 
-  const currentBackup = localStorage.getItem("mori_auto_backup") || "off";
+  const currentBackup = localStorage.getItem("shiro_auto_backup") || "off";
   const autoBackupText = document.getElementById("autoBackupText");
   if (autoBackupText) {
     if (currentBackup === "off")
@@ -209,57 +209,57 @@ export function updateCustomSelectsUI() {
         lang["backup-monthly"] || "Monthly (30 Days)";
   }
 
-  const currentAnimSpeed = localStorage.getItem("mori_anim_speed") || "normal";
+  const currentAnimSpeed = localStorage.getItem("shiro_anim_speed") || "normal";
   const animSpeedText = document.getElementById("animSpeedText");
   if (animSpeedText)
     animSpeedText.textContent =
       lang[`anim-${currentAnimSpeed}`] || currentAnimSpeed;
 
-  const currentTextSize = localStorage.getItem("mori_text_size") || "medium";
+  const currentTextSize = localStorage.getItem("shiro_text_size") || "medium";
   const textSizeText = document.getElementById("textSizeText");
   if (textSizeText)
     textSizeText.textContent =
       lang[`text-${currentTextSize}`] || currentTextSize;
 
-  const currentConcurrent = localStorage.getItem("mori_concurrent") || "1";
+  const currentConcurrent = localStorage.getItem("shiro_concurrent") || "1";
   const concurrentText = document.getElementById("concurrentText");
   if (concurrentText)
     concurrentText.textContent =
       lang[`concurrent-${currentConcurrent}`] || currentConcurrent;
 
-  const currentOverwrite = localStorage.getItem("mori_overwrite") || "rename";
+  const currentOverwrite = localStorage.getItem("shiro_overwrite") || "rename";
   const overwriteText = document.getElementById("overwriteText");
   if (overwriteText)
     overwriteText.textContent =
       lang[`overwrite-${currentOverwrite}`] || currentOverwrite;
 
-  const currentMaxRetry = localStorage.getItem("mori_max_retry") || "3";
+  const currentMaxRetry = localStorage.getItem("shiro_max_retry") || "3";
   const maxRetryText = document.getElementById("maxRetryText");
   if (maxRetryText)
     maxRetryText.textContent =
       lang[`retry-${currentMaxRetry}`] || `${currentMaxRetry} Attempts`;
 
-  const currentDoh = localStorage.getItem("mori_doh") || "off";
+  const currentDoh = localStorage.getItem("shiro_doh") || "off";
   const dohText = document.getElementById("dohText");
   if (dohText) dohText.textContent = lang[`doh-${currentDoh}`] || currentDoh;
 
-  const currentToastDur = localStorage.getItem("mori_toast_dur") || "3";
+  const currentToastDur = localStorage.getItem("shiro_toast_dur") || "3";
   const toastDurText = document.getElementById("toastDurText");
   if (toastDurText)
     toastDurText.textContent =
       lang[`toast-dur-${currentToastDur}`] || `${currentToastDur}s`;
 
-  const currentGlass = localStorage.getItem("mori_glassmorphism") || "subtle";
+  const currentGlass = localStorage.getItem("shiro_glassmorphism") || "subtle";
   const glassText = document.getElementById("glassText");
   if (glassText)
     glassText.textContent = lang[`glass-${currentGlass}`] || currentGlass;
 
-  const currentCorner = localStorage.getItem("mori_ui_corner") || "modern";
+  const currentCorner = localStorage.getItem("shiro_ui_corner") || "modern";
   const cornerText = document.getElementById("cornerText");
   if (cornerText)
     cornerText.textContent = lang[`corner-${currentCorner}`] || currentCorner;
 
-  const currentSoundPack = localStorage.getItem("mori_sound_pack") || "chime";
+  const currentSoundPack = localStorage.getItem("shiro_sound_pack") || "chime";
   const soundPackText = document.getElementById("soundPackText");
   if (soundPackText)
     soundPackText.textContent =
@@ -312,15 +312,15 @@ export function updateGreeting() {}
 
 export function switchLanguage(lang) {
   setCurrentLang(lang);
-  localStorage.setItem("mori_lang", lang);
-  syncSettingToNative("mori_lang", lang);
+  localStorage.setItem("shiro_lang", lang);
+  syncSettingToNative("shiro_lang", lang);
   setUIState({ currentLang });
   setUtilsState({ currentLang });
   updateLanguageUI();
   updateGreeting();
   renderHistory(onHistoryItemClick, onHistoryDeleteClick);
   window.dispatchEvent(
-    new CustomEvent("mori_language_changed", { detail: { lang } }),
+    new CustomEvent("shiro_language_changed", { detail: { lang } }),
   );
 
   let msg = "Language updated";
@@ -340,26 +340,26 @@ export function switchLanguage(lang) {
  */
 export function initLanguageAndNavigation() {
   // 1. Initialize Dropdowns
-  setupCustomSelect("languageSelect", "mori_lang", "currentLangDisplay", "languageMenu");
-  setupCustomSelect("filenameSelect", "mori_filename", "filenameText", "filenameMenu");
-  setupCustomSelect("fontSelect", "mori_font", "fontText", "fontMenu");
-  setupCustomSelect("historyLimitSelect", "mori_history_limit", "historyLimitText", "historyLimitMenu");
-  setupCustomSelect("autoClearDaysSelect", "mori_auto_clear_days", "autoClearDaysText", "autoClearDaysMenu");
-  setupCustomSelect("autoClearCacheDaysSelect", "mori_auto_clear_cache_days", "autoClearCacheDaysText", "autoClearCacheDaysMenu");
-  setupCustomSelect("preferServerSelect", "mori_prefer_server", "preferServerText", "preferServerMenu");
-  setupCustomSelect("batchPhotoModeSelect", "mori_batch_photo_mode", "batchPhotoModeText", "batchPhotoModeMenu");
-  setupCustomSelect("userAgentSelect", "mori_user_agent", "userAgentText", "userAgentMenu");
-  setupCustomSelect("requestTimeoutSelect", "mori_request_timeout", "requestTimeoutText", "requestTimeoutMenu");
-  setupCustomSelect("animSpeedSelect", "mori_anim_speed", "animSpeedText", "animSpeedMenu");
-  setupCustomSelect("textSizeSelect", "mori_text_size", "textSizeText", "textSizeMenu");
-  setupCustomSelect("glassSelect", "mori_glassmorphism", "glassText", "glassMenu");
-  setupCustomSelect("cornerSelect", "mori_ui_corner", "cornerText", "cornerMenu");
-  setupCustomSelect("soundPackSelect", "mori_sound_pack", "soundPackText", "soundPackMenu");
-  setupCustomSelect("concurrentSelect", "mori_concurrent", "concurrentText", "concurrentMenu");
-  setupCustomSelect("overwriteSelect", "mori_overwrite", "overwriteText", "overwriteMenu");
-  setupCustomSelect("maxRetrySelect", "mori_max_retry", "maxRetryText", "maxRetryMenu");
-  setupCustomSelect("dohSelect", "mori_doh", "dohText", "dohMenu");
-  setupCustomSelect("toastDurSelect", "mori_toast_dur", "toastDurText", "toastDurMenu");
+  setupCustomSelect("languageSelect", "shiro_lang", "currentLangDisplay", "languageMenu");
+  setupCustomSelect("filenameSelect", "shiro_filename", "filenameText", "filenameMenu");
+  setupCustomSelect("fontSelect", "shiro_font", "fontText", "fontMenu");
+  setupCustomSelect("historyLimitSelect", "shiro_history_limit", "historyLimitText", "historyLimitMenu");
+  setupCustomSelect("autoClearDaysSelect", "shiro_auto_clear_days", "autoClearDaysText", "autoClearDaysMenu");
+  setupCustomSelect("autoClearCacheDaysSelect", "shiro_auto_clear_cache_days", "autoClearCacheDaysText", "autoClearCacheDaysMenu");
+  setupCustomSelect("preferServerSelect", "shiro_prefer_server", "preferServerText", "preferServerMenu");
+  setupCustomSelect("batchPhotoModeSelect", "shiro_batch_photo_mode", "batchPhotoModeText", "batchPhotoModeMenu");
+  setupCustomSelect("userAgentSelect", "shiro_user_agent", "userAgentText", "userAgentMenu");
+  setupCustomSelect("requestTimeoutSelect", "shiro_request_timeout", "requestTimeoutText", "requestTimeoutMenu");
+  setupCustomSelect("animSpeedSelect", "shiro_anim_speed", "animSpeedText", "animSpeedMenu");
+  setupCustomSelect("textSizeSelect", "shiro_text_size", "textSizeText", "textSizeMenu");
+  setupCustomSelect("glassSelect", "shiro_glassmorphism", "glassText", "glassMenu");
+  setupCustomSelect("cornerSelect", "shiro_ui_corner", "cornerText", "cornerMenu");
+  setupCustomSelect("soundPackSelect", "shiro_sound_pack", "soundPackText", "soundPackMenu");
+  setupCustomSelect("concurrentSelect", "shiro_concurrent", "concurrentText", "concurrentMenu");
+  setupCustomSelect("overwriteSelect", "shiro_overwrite", "overwriteText", "overwriteMenu");
+  setupCustomSelect("maxRetrySelect", "shiro_max_retry", "maxRetryText", "maxRetryMenu");
+  setupCustomSelect("dohSelect", "shiro_doh", "dohText", "dohMenu");
+  setupCustomSelect("toastDurSelect", "shiro_toast_dur", "toastDurText", "toastDurMenu");
 
   // 2. Sub-page Navigation
   document.addEventListener("click", (e) => {
@@ -404,14 +404,14 @@ export function initLanguageAndNavigation() {
         lang["confirm-reset-settings"] ||
           "Reset all settings to their defaults? This will not delete your history or downloaded files.",
         () => {
-          const preserve = ["mori_history", "mori_dl_count", "mori_incognito"];
+          const preserve = ["shiro_history", "shiro_dl_count", "shiro_incognito"];
           const preserved = {};
           preserve.forEach((k) => {
             const v = localStorage.getItem(k);
             if (v !== null) preserved[k] = v;
           });
           Object.keys(localStorage)
-            .filter((k) => k.startsWith("mori_"))
+            .filter((k) => k.startsWith("shiro_"))
             .forEach((k) => localStorage.removeItem(k));
           Object.entries(preserved).forEach(([k, v]) =>
             localStorage.setItem(k, v),
@@ -426,18 +426,14 @@ export function initLanguageAndNavigation() {
   // 4. Report Bug Button
   reportBugBtn?.addEventListener("click", () => {
     const deviceInfo = `Model: ${navigator.userAgent}\nPlatform: ${platformVal?.textContent || "Unknown"}\nVersion: ${APP_VERSION}`;
-    const text = encodeURIComponent(
-      `Hi coflyn, I found a bug in Mori App:\n\n[BUG DESCRIPTION HERE]\n\n---\nDevice Info:\n${deviceInfo}`,
+    const title = encodeURIComponent(`[Bug] Shiro v${APP_VERSION}`);
+    const body = encodeURIComponent(
+      `Hi Raxy Utama, I found a bug in Shiro App:\n\n[BUG DESCRIPTION HERE]\n\n---\nDevice Info:\n${deviceInfo}`,
     );
-    const whatsappUrl = `whatsapp://send?phone=6285194858996&text=${text}`;
-    const whatsappWebUrl = `https://wa.me/6285194858996?text=${text}`;
+    const issueUrl = `https://github.com/raxyutama-cloud/Shiro/issues/new?title=${title}&body=${body}`;
     const lang = translations[currentLang] || translations.en;
-    showToast(lang["label-opening-wa"] || "Opening WhatsApp...");
-    if (window.Capacitor?.isNativePlatform?.()) {
-      openExternalUrl(whatsappUrl);
-    } else {
-      openExternalUrl(whatsappWebUrl);
-    }
+    showToast(lang["label-opening-wa"] || "Opening issue tracker...");
+    openExternalUrl(issueUrl);
   });
 
   // 5. Close dropdowns when clicking outside

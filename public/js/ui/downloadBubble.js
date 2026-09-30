@@ -52,7 +52,7 @@ class DownloadBubbleManager {
     } else {
       this.ensureMounted();
     }
-    window.addEventListener("mori_language_changed", () => {
+    window.addEventListener("shiro_language_changed", () => {
       this.refreshTranslations();
     });
   }

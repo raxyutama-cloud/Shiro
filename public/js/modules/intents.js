@@ -74,12 +74,12 @@ export async function handlePasteFromClipboard(isSilent = false) {
         }
 
         const autoAnalyze =
-          localStorage.getItem("mori_auto_analyze") === "true";
+          localStorage.getItem("shiro_auto_analyze") === "true";
         if (autoAnalyze) {
           setTimeout(() => downloadBtn?.click(), 300);
         } else if (isSilent) {
           const autoDownload =
-            localStorage.getItem("mori_auto_download") === "true";
+            localStorage.getItem("shiro_auto_download") === "true";
           if (autoDownload) {
             // Wi-Fi check for auto-download
             const canAuto = await checkWifiOnlyGuard();
@@ -169,7 +169,7 @@ function processSharedText(text) {
 }
 
 // Handle Shared Intent from Native Android
-window.addEventListener("moriShareIntent", (e) => {
+window.addEventListener("shiroShareIntent", (e) => {
   try {
     let data = e.detail;
     if (typeof data === "string") {
@@ -188,9 +188,9 @@ window.addEventListener("moriShareIntent", (e) => {
 
 // Startup check for shared text (fallback for cold starts)
 setTimeout(() => {
-  if (window.moriShareText) {
-    processSharedText(window.moriShareText);
-    window.moriShareText = null; // Clear it
+  if (window.shiroShareText) {
+    processSharedText(window.shiroShareText);
+    window.shiroShareText = null; // Clear it
   }
 }, 1500);
 
@@ -223,8 +223,8 @@ if (App && typeof App.addListener === "function") {
         updateGreeting();
       } catch (_) {}
 
-      const loopSetting = localStorage.getItem("mori_loop") !== "false";
-      const autoPaste = localStorage.getItem("mori_auto_paste") !== "false";
+      const loopSetting = localStorage.getItem("shiro_loop") !== "false";
+      const autoPaste = localStorage.getItem("shiro_auto_paste") !== "false";
       if (autoPaste) {
         setIntentPending(true); // Assume a share might be coming
 
@@ -250,10 +250,10 @@ if (App && typeof App.addListener === "function") {
 export function mergePendingHistorySync() {
   try {
     let raw = null;
-    if (window.MoriMainBridge?.getPendingHistoryList) {
-      raw = window.MoriMainBridge.getPendingHistoryList();
-    } else if (window.MoriShareBridge?.getPendingHistoryList) {
-      raw = window.MoriShareBridge.getPendingHistoryList();
+    if (window.ShiroMainBridge?.getPendingHistoryList) {
+      raw = window.ShiroMainBridge.getPendingHistoryList();
+    } else if (window.ShiroShareBridge?.getPendingHistoryList) {
+      raw = window.ShiroShareBridge.getPendingHistoryList();
     }
 
     if (!raw || raw === "[]") return false;
@@ -264,7 +264,7 @@ export function mergePendingHistorySync() {
     const items = itemsRaw.map((x) =>
       typeof x === "string" ? JSON.parse(x) : x,
     );
-    let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
 
     items.forEach((newItem) => {
       if (!newItem || !newItem.title) return;
@@ -290,10 +290,10 @@ export function mergePendingHistorySync() {
 
     safeSetHistory(history.slice(0, 100));
 
-    if (window.MoriMainBridge?.clearPendingHistoryList) {
-      window.MoriMainBridge.clearPendingHistoryList();
-    } else if (window.MoriShareBridge?.clearPendingHistoryList) {
-      window.MoriShareBridge.clearPendingHistoryList();
+    if (window.ShiroMainBridge?.clearPendingHistoryList) {
+      window.ShiroMainBridge.clearPendingHistoryList();
+    } else if (window.ShiroShareBridge?.clearPendingHistoryList) {
+      window.ShiroShareBridge.clearPendingHistoryList();
     }
     return true;
   } catch (e) {
@@ -311,9 +311,9 @@ export function checkAndMergePendingHistory() {
 
 window.checkAndMergePendingHistorySync = mergePendingHistorySync;
 window.checkAndMergePendingHistory = checkAndMergePendingHistory;
-window.moriMergeShareHistoryList = checkAndMergePendingHistory;
+window.shiroMergeShareHistoryList = checkAndMergePendingHistory;
 
-window.moriRefreshHistory = function () {
+window.shiroRefreshHistory = function () {
   checkAndMergePendingHistory();
 };
 

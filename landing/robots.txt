@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://getmori.vercel.app/sitemap.xml
+Sitemap: https://raxyutama-cloud.github.io/Shiro/sitemap.xml

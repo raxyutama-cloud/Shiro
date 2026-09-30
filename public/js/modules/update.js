@@ -46,7 +46,7 @@ async function fetchLatestRelease() {
       url: UPDATE_CHECK_URL,
       headers: {
         Accept: "application/vnd.github+json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Shiro-App",
       },
     });
     data = typeof res.data === "string" ? JSON.parse(res.data) : res.data;
@@ -56,7 +56,7 @@ async function fetchLatestRelease() {
       method: "GET",
       headers: {
         Accept: "application/vnd.github+json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Shiro-App",
       },
     });
     const rawData = res?.data || res?.body || res;
@@ -107,8 +107,8 @@ export async function checkUpdate() {
 }
 
 export async function autoCheckUpdate() {
-  if (localStorage.getItem("mori_auto_update") === "false") return;
-  if (localStorage.getItem("mori_skip_auto_update")) return;
+  if (localStorage.getItem("shiro_auto_update") === "false") return;
+  if (localStorage.getItem("shiro_skip_auto_update")) return;
 
   try {
     const data = await fetchLatestRelease();
@@ -120,7 +120,7 @@ export async function autoCheckUpdate() {
       const msg = `<div style="text-align:center;padding:8px 0;"><span style="font-size:2rem;display:block;margin-bottom:8px;">🎉</span>${lang["label-update-available"]} <strong>v${latest}</strong><br><br><span id="autoUpdateLink" style="color:var(--primary);text-decoration:underline;font-weight:600;cursor:pointer;">${lang["btn-update"] || "Open Repository"}</span></div>`;
       showInfoModal(title, msg, {
         showDontShow: true,
-        dontShowKey: "mori_skip_auto_update",
+        dontShowKey: "shiro_skip_auto_update",
         dontShowLabel: lang["label-dont-show-again"] || "Don't show again",
       });
       setTimeout(() => {
@@ -159,18 +159,18 @@ shareAppBtn?.addEventListener("click", async () => {
   const lang = translations[currentLang];
   if (window.Capacitor?.isNativePlatform?.() && Share) {
     await Share.share({
-      title: "Mori App",
+      title: "Shiro App",
       text: lang["share-msg"],
-      url: "https://github.com/coflyn/Mori",
-      dialogTitle: "Share Mori",
+      url: "https://github.com/raxyutama-cloud/Shiro",
+      dialogTitle: "Share Shiro",
     });
   } else {
     // Fallback for web
     if (navigator.share) {
       navigator.share({
-        title: "Mori App",
+        title: "Shiro App",
         text: lang["share-msg"],
-        url: "https://github.com/coflyn/Mori",
+        url: "https://github.com/raxyutama-cloud/Shiro",
       });
     } else {
       showToast(t("toast-share-not-supported"));

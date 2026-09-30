@@ -27,9 +27,9 @@ import {
 export function initBehaviorSettings() {
   // Incognito Mode
   if (incognitoToggle) {
-    incognitoToggle.checked = localStorage.getItem("mori_incognito") === "true";
+    incognitoToggle.checked = localStorage.getItem("shiro_incognito") === "true";
     incognitoToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_incognito", e.target.checked);
+      localStorage.setItem("shiro_incognito", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -42,9 +42,9 @@ export function initBehaviorSettings() {
   // Auto-Paste Toggle
   if (autoPasteToggle) {
     autoPasteToggle.checked =
-      localStorage.getItem("mori_auto_paste") !== "false";
+      localStorage.getItem("shiro_auto_paste") !== "false";
     autoPasteToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_paste", e.target.checked);
+      localStorage.setItem("shiro_auto_paste", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -57,9 +57,9 @@ export function initBehaviorSettings() {
   // Data Saver Mode
   if (dataSaverToggle) {
     dataSaverToggle.checked =
-      localStorage.getItem("mori_data_saver") === "true";
+      localStorage.getItem("shiro_data_saver") === "true";
     dataSaverToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_data_saver", e.target.checked);
+      localStorage.setItem("shiro_data_saver", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -73,9 +73,9 @@ export function initBehaviorSettings() {
   // Auto-Clear History Toggle
   if (autoClearHistoryToggle) {
     autoClearHistoryToggle.checked =
-      localStorage.getItem("mori_autoclear_history") === "true";
+      localStorage.getItem("shiro_autoclear_history") === "true";
     autoClearHistoryToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_autoclear_history", e.target.checked);
+      localStorage.setItem("shiro_autoclear_history", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -88,9 +88,9 @@ export function initBehaviorSettings() {
 
   // Wi-Fi Only
   if (wifiOnlyToggle) {
-    wifiOnlyToggle.checked = localStorage.getItem("mori_wifi_only") === "true";
+    wifiOnlyToggle.checked = localStorage.getItem("shiro_wifi_only") === "true";
     wifiOnlyToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_wifi_only", e.target.checked);
+      localStorage.setItem("shiro_wifi_only", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -103,9 +103,9 @@ export function initBehaviorSettings() {
   // Auto-Download Toggle
   if (autoDownloadToggle) {
     autoDownloadToggle.checked =
-      localStorage.getItem("mori_auto_download") === "true";
+      localStorage.getItem("shiro_auto_download") === "true";
     autoDownloadToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_download", e.target.checked);
+      localStorage.setItem("shiro_auto_download", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -119,9 +119,9 @@ export function initBehaviorSettings() {
   const autoAnalyzeToggle = document.getElementById("autoAnalyzeToggle");
   if (autoAnalyzeToggle) {
     autoAnalyzeToggle.checked =
-      localStorage.getItem("mori_auto_analyze") === "true";
+      localStorage.getItem("shiro_auto_analyze") === "true";
     autoAnalyzeToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_analyze", e.target.checked);
+      localStorage.setItem("shiro_auto_analyze", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -135,9 +135,9 @@ export function initBehaviorSettings() {
   const autoClearInputToggle = document.getElementById("autoClearInputToggle");
   if (autoClearInputToggle) {
     autoClearInputToggle.checked =
-      localStorage.getItem("mori_auto_clear_input") === "true";
+      localStorage.getItem("shiro_auto_clear_input") === "true";
     autoClearInputToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_clear_input", e.target.checked);
+      localStorage.setItem("shiro_auto_clear_input", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -154,16 +154,16 @@ export function initBehaviorSettings() {
   const updateSoundPackVisibility = () => {
     if (!soundPackItem) return;
     const isSoundEnabled =
-      localStorage.getItem("mori_download_sound") !== "false";
+      localStorage.getItem("shiro_download_sound") !== "false";
     soundPackItem.style.display = isSoundEnabled ? "flex" : "none";
   };
   updateSoundPackVisibility();
 
   if (downloadSoundToggle) {
     downloadSoundToggle.checked =
-      localStorage.getItem("mori_download_sound") !== "false";
+      localStorage.getItem("shiro_download_sound") !== "false";
     downloadSoundToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_download_sound", e.target.checked);
+      localStorage.setItem("shiro_download_sound", e.target.checked);
       updateSoundPackVisibility();
       const lang = translations[currentLang] || translations.en;
       showToast(
@@ -181,16 +181,16 @@ export function initBehaviorSettings() {
   const updateMaxRetryVisibility = () => {
     if (!maxRetryItem) return;
     const isRetryEnabled =
-      localStorage.getItem("mori_auto_retry") !== "false";
+      localStorage.getItem("shiro_auto_retry") !== "false";
     maxRetryItem.style.display = isRetryEnabled ? "flex" : "none";
   };
   updateMaxRetryVisibility();
 
   if (autoRetryToggle) {
     autoRetryToggle.checked =
-      localStorage.getItem("mori_auto_retry") !== "false";
+      localStorage.getItem("shiro_auto_retry") !== "false";
     autoRetryToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_retry", e.target.checked);
+      localStorage.setItem("shiro_auto_retry", e.target.checked);
       updateMaxRetryVisibility();
       const lang = translations[currentLang] || translations.en;
       showToast(
@@ -209,9 +209,9 @@ export function initBehaviorSettings() {
     if (hapticItem) hapticItem.style.display = "none";
   }
   if (hapticToggle) {
-    hapticToggle.checked = localStorage.getItem("mori_haptic") === "true";
+    hapticToggle.checked = localStorage.getItem("shiro_haptic") === "true";
     hapticToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_haptic", e.target.checked);
+      localStorage.setItem("shiro_haptic", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -225,9 +225,9 @@ export function initBehaviorSettings() {
   const autoFolderToggle = document.getElementById("autoFolderToggle");
   if (autoFolderToggle) {
     autoFolderToggle.checked =
-      localStorage.getItem("mori_auto_folder") !== "false";
+      localStorage.getItem("shiro_auto_folder") !== "false";
     autoFolderToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_folder", e.target.checked);
+      localStorage.setItem("shiro_auto_folder", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -241,9 +241,9 @@ export function initBehaviorSettings() {
   const keepAwakeToggle = document.getElementById("keepAwakeToggle");
   if (keepAwakeToggle) {
     keepAwakeToggle.checked =
-      localStorage.getItem("mori_keep_awake") === "true";
+      localStorage.getItem("shiro_keep_awake") === "true";
     keepAwakeToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_keep_awake", e.target.checked);
+      localStorage.setItem("shiro_keep_awake", e.target.checked);
       if (e.target.checked) requestWakeLock();
       else releaseWakeLock();
       const lang = translations[currentLang] || translations.en;
@@ -259,9 +259,9 @@ export function initBehaviorSettings() {
   const autoUpdateToggle = document.getElementById("autoUpdateToggle");
   if (autoUpdateToggle) {
     autoUpdateToggle.checked =
-      localStorage.getItem("mori_auto_update") !== "false";
+      localStorage.getItem("shiro_auto_update") !== "false";
     autoUpdateToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_update", e.target.checked);
+      localStorage.setItem("shiro_auto_update", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -275,9 +275,9 @@ export function initBehaviorSettings() {
   const forceIpv4Toggle = document.getElementById("forceIpv4Toggle");
   if (forceIpv4Toggle) {
     forceIpv4Toggle.checked =
-      localStorage.getItem("mori_force_ipv4") === "true";
+      localStorage.getItem("shiro_force_ipv4") === "true";
     forceIpv4Toggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_force_ipv4", e.target.checked);
+      localStorage.setItem("shiro_force_ipv4", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -291,9 +291,9 @@ export function initBehaviorSettings() {
   const headerSpoofingToggle = document.getElementById("headerSpoofingToggle");
   if (headerSpoofingToggle) {
     headerSpoofingToggle.checked =
-      localStorage.getItem("mori_header_spoofing") !== "false";
+      localStorage.getItem("shiro_header_spoofing") !== "false";
     headerSpoofingToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_header_spoofing", e.target.checked);
+      localStorage.setItem("shiro_header_spoofing", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -309,9 +309,9 @@ export function initBehaviorSettings() {
   );
   if (cellularWarningToggle) {
     cellularWarningToggle.checked =
-      localStorage.getItem("mori_cellular_warning") === "true";
+      localStorage.getItem("shiro_cellular_warning") === "true";
     cellularWarningToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_cellular_warning", e.target.checked);
+      localStorage.setItem("shiro_cellular_warning", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -326,9 +326,9 @@ export function initBehaviorSettings() {
   const bypassSslToggle = document.getElementById("bypassSslToggle");
   if (bypassSslToggle) {
     bypassSslToggle.checked =
-      localStorage.getItem("mori_bypass_ssl") === "true";
+      localStorage.getItem("shiro_bypass_ssl") === "true";
     bypassSslToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_bypass_ssl", e.target.checked);
+      localStorage.setItem("shiro_bypass_ssl", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -342,9 +342,9 @@ export function initBehaviorSettings() {
   const hideProgressToggle = document.getElementById("hideProgressToggle");
   if (hideProgressToggle) {
     hideProgressToggle.checked =
-      localStorage.getItem("mori_hide_progress") === "true";
+      localStorage.getItem("shiro_hide_progress") === "true";
     hideProgressToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_hide_progress", e.target.checked);
+      localStorage.setItem("shiro_hide_progress", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -366,7 +366,7 @@ export function initBehaviorSettings() {
         if (CapacitorHttp) {
           await CapacitorHttp.get({
             url: "https://api.github.com/zen",
-            headers: { "User-Agent": "Mori-App" },
+            headers: { "User-Agent": "Shiro-App" },
           });
         } else {
           await fetch("https://api.github.com/zen");
@@ -383,9 +383,9 @@ export function initBehaviorSettings() {
 
   // Auto-Play and Auto-Loop Toggles
   if (autoPlayToggle) {
-    autoPlayToggle.checked = localStorage.getItem("mori_autoplay") !== "false";
+    autoPlayToggle.checked = localStorage.getItem("shiro_autoplay") !== "false";
     autoPlayToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_autoplay", e.target.checked);
+      localStorage.setItem("shiro_autoplay", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -396,9 +396,9 @@ export function initBehaviorSettings() {
   }
 
   if (autoLoopToggle) {
-    autoLoopToggle.checked = localStorage.getItem("mori_loop") !== "false";
+    autoLoopToggle.checked = localStorage.getItem("shiro_loop") !== "false";
     autoLoopToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_loop", e.target.checked);
+      localStorage.setItem("shiro_loop", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked

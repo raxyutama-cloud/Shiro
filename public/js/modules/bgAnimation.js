@@ -9,13 +9,13 @@ let width = window.innerWidth;
 let height = window.innerHeight;
 let dpr = window.devicePixelRatio || 1;
 
-let isEnabled = localStorage.getItem("mori_bg_animated") === "true";
-let currentShape = localStorage.getItem("mori_bg_shape") || "stars";
+let isEnabled = localStorage.getItem("shiro_bg_animated") === "true";
+let currentShape = localStorage.getItem("shiro_bg_shape") || "stars";
 let currentBrightness = parseInt(
-  localStorage.getItem("mori_bg_brightness") || "150",
+  localStorage.getItem("shiro_bg_brightness") || "150",
   10,
 );
-let currentSpeed = parseInt(localStorage.getItem("mori_bg_speed") || "100", 10);
+let currentSpeed = parseInt(localStorage.getItem("shiro_bg_speed") || "100", 10);
 let speedFactor = currentSpeed / 100;
 
 let globalTick = 0;
@@ -796,7 +796,7 @@ export function stopAnimation() {
 
 export function setAnimatedBgEnabled(enabled) {
   isEnabled = !!enabled;
-  localStorage.setItem("mori_bg_animated", isEnabled ? "true" : "false");
+  localStorage.setItem("shiro_bg_animated", isEnabled ? "true" : "false");
   if (isEnabled) {
     startAnimation();
   } else {
@@ -806,19 +806,19 @@ export function setAnimatedBgEnabled(enabled) {
 
 export function setAnimatedBgShape(shape) {
   currentShape = shape;
-  localStorage.setItem("mori_bg_shape", shape);
+  localStorage.setItem("shiro_bg_shape", shape);
   initElements();
 }
 
 export function setAnimatedBgBrightness(value) {
   currentBrightness = Math.max(20, Math.min(200, parseInt(value, 10) || 100));
-  localStorage.setItem("mori_bg_brightness", currentBrightness.toString());
+  localStorage.setItem("shiro_bg_brightness", currentBrightness.toString());
 }
 
 export function setAnimatedBgSpeed(value) {
   currentSpeed = Math.max(30, Math.min(200, parseInt(value, 10) || 100));
   speedFactor = currentSpeed / 100;
-  localStorage.setItem("mori_bg_speed", currentSpeed.toString());
+  localStorage.setItem("shiro_bg_speed", currentSpeed.toString());
 }
 
 export function initBgAnimation() {

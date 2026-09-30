@@ -49,7 +49,7 @@ export function sanitizeTitle(title, type) {
     .trim();
   const isTrackType = /^\d+\.\s+/.test(cleanTypeLabel);
 
-  let effectiveTitle = title || "Mori Media";
+  let effectiveTitle = title || "Shiro Media";
   if (isTrackType) {
     effectiveTitle =
       cleanTypeLabel.replace(/^\d+\.\s+/, "").trim() || cleanTypeLabel;
@@ -62,11 +62,11 @@ export function sanitizeTitle(title, type) {
     .replace(/\s+/g, " ")
     .substring(0, 60);
 
-  return sanitized || "Mori_Media";
+  return sanitized || "Shiro_Media";
 }
 
 export function generateFileName(sanitizedTitle, ext, sourceUrl, url) {
-  const template = localStorage.getItem("mori_filename") || "title";
+  const template = localStorage.getItem("shiro_filename") || "title";
   const cleanTitle = sanitizedTitle.toLowerCase().endsWith("." + ext.toLowerCase())
     ? sanitizedTitle.slice(0, -(ext.length + 1))
     : sanitizedTitle;
@@ -193,7 +193,7 @@ export async function resolveUniqueFileName(
   Filesystem,
   btn,
 ) {
-  const overwriteMode = localStorage.getItem("mori_overwrite") || "rename";
+  const overwriteMode = localStorage.getItem("shiro_overwrite") || "rename";
 
   try {
     let checkExist = null;

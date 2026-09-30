@@ -9,14 +9,14 @@ const accentColors = {
 };
 
 export function applyColorAccent() {
-  const theme = localStorage.getItem("mori_theme") || "light";
+  const theme = localStorage.getItem("shiro_theme") || "light";
   const color = accentColors.black[theme] || "#1a1917";
   document.documentElement.style.setProperty("--primary", color);
 }
 
 export function applyFont() {
   if (!document.body) return;
-  const font = localStorage.getItem("mori_font") || "display";
+  const font = localStorage.getItem("shiro_font") || "display";
   document.body.className = (document.body.className || "").replace(
     /\bfont-\S+/g,
     "",
@@ -26,7 +26,7 @@ export function applyFont() {
 
 export function applyAnimSpeed() {
   if (!document.body) return;
-  const speed = localStorage.getItem("mori_anim_speed") || "normal";
+  const speed = localStorage.getItem("shiro_anim_speed") || "normal";
   document.body.classList.remove(
     "anim-off",
     "anim-slow",
@@ -37,7 +37,7 @@ export function applyAnimSpeed() {
 }
 
 export function applyTextSize() {
-  const size = localStorage.getItem("mori_text_size") || "medium";
+  const size = localStorage.getItem("shiro_text_size") || "medium";
   const fontSizeMap = { small: "14px", medium: "16px", large: "18px" };
   document.documentElement.style.fontSize = fontSizeMap[size] || "16px";
   document.body.classList.remove("text-small", "text-medium", "text-large");
@@ -46,14 +46,14 @@ export function applyTextSize() {
 
 export function applyGlassmorphism() {
   if (!document.body) return;
-  const mode = localStorage.getItem("mori_glassmorphism") || "subtle";
+  const mode = localStorage.getItem("shiro_glassmorphism") || "subtle";
   document.body.classList.remove("glass-off", "glass-subtle", "glass-deep");
   document.body.classList.add(`glass-${mode}`);
 }
 
 export function applyUiCorner() {
   if (!document.body) return;
-  const corner = localStorage.getItem("mori_ui_corner") || "modern";
+  const corner = localStorage.getItem("shiro_ui_corner") || "modern";
   document.body.classList.remove(
     "corner-sharp",
     "corner-modern",
@@ -67,15 +67,15 @@ export function applyUiCorner() {
  */
 export function initAppearance() {
   // 1. Theme initialization
-  const savedTheme = localStorage.getItem("mori_theme") || "light";
+  const savedTheme = localStorage.getItem("shiro_theme") || "light";
   document.documentElement.setAttribute("data-theme", savedTheme);
   if (darkModeToggle) darkModeToggle.checked = savedTheme === "dark";
 
   darkModeToggle?.addEventListener("change", (e) => {
     const theme = e.target.checked ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("mori_theme", theme);
-    syncSettingToNative("mori_theme", theme);
+    localStorage.setItem("shiro_theme", theme);
+    syncSettingToNative("shiro_theme", theme);
     applyColorAccent();
     const lang = translations[currentLang] || translations.en;
     showToast(
@@ -89,10 +89,10 @@ export function initAppearance() {
   const compactModeToggle = document.getElementById("compactModeToggle");
   if (compactModeToggle) {
     compactModeToggle.checked =
-      localStorage.getItem("mori_compact_mode") === "true";
+      localStorage.getItem("shiro_compact_mode") === "true";
     if (compactModeToggle.checked) document.body.classList.add("compact-mode");
     compactModeToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_compact_mode", e.target.checked);
+      localStorage.setItem("shiro_compact_mode", e.target.checked);
       if (e.target.checked) {
         document.body.classList.add("compact-mode");
       } else {

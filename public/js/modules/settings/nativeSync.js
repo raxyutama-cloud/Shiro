@@ -2,12 +2,12 @@
 import { platformVal } from "../core.js";
 
 /**
- * Synchronizes a single Mori setting to Android SharedPreferences for background & share activities
+ * Synchronizes a single Shiro setting to Android SharedPreferences for background & share activities
  */
 export function syncSettingToNative(key, val) {
-  if (window.MoriMainBridge?.saveSetting) {
+  if (window.ShiroMainBridge?.saveSetting) {
     try {
-      window.MoriMainBridge.saveSetting(key, String(val));
+      window.ShiroMainBridge.saveSetting(key, String(val));
     } catch (e) {
       console.error("syncSettingToNative error", e);
     }
@@ -19,16 +19,16 @@ export function syncSettingToNative(key, val) {
  */
 export function syncAllSettingsToNative() {
   const keys = [
-    "mori_lang",
-    "mori_theme",
-    "mori_font",
-    "mori_prefer_server",
-    "mori_download_path",
-    "mori_auto_folder",
-    "mori_filename",
-    "mori_incognito",
-    "mori_auto_download",
-    "mori_wifi_only",
+    "shiro_lang",
+    "shiro_theme",
+    "shiro_font",
+    "shiro_prefer_server",
+    "shiro_download_path",
+    "shiro_auto_folder",
+    "shiro_filename",
+    "shiro_incognito",
+    "shiro_auto_download",
+    "shiro_wifi_only",
   ];
   keys.forEach((key) => {
     const val = localStorage.getItem(key);

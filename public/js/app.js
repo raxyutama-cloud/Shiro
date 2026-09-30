@@ -101,7 +101,7 @@ if (appVersionVal) appVersionVal.textContent = " " + APP_VERSION;
 
 // Run guide check on startup
 function initUserGuide() {
-  const isHidden = localStorage.getItem("mori_hide_guide") === "true";
+  const isHidden = localStorage.getItem("shiro_hide_guide") === "true";
   if (!isHidden) {
     guideOverlay?.classList.remove("hidden");
   }
@@ -109,14 +109,14 @@ function initUserGuide() {
 
 closeGuideBtn?.addEventListener("click", () => {
   if (hideGuideCheckbox?.checked) {
-    localStorage.setItem("mori_hide_guide", "true");
+    localStorage.setItem("shiro_hide_guide", "true");
   }
   guideOverlay?.classList.add("hidden");
 });
 
 guideToSettingsBtn?.addEventListener("click", () => {
   if (hideGuideCheckbox?.checked) {
-    localStorage.setItem("mori_hide_guide", "true");
+    localStorage.setItem("shiro_hide_guide", "true");
   }
   guideOverlay?.classList.add("hidden");
   switchPage("settings");
@@ -185,15 +185,15 @@ function refreshHistoryIfVisible() {
     renderHistory(onHistoryItemClick, onHistoryDeleteClick);
   }
 }
-window.addEventListener("mori_download_started", refreshHistoryIfVisible);
-window.addEventListener("mori_download_ended", refreshHistoryIfVisible);
-window.addEventListener("mori_download_cancelled", refreshHistoryIfVisible);
+window.addEventListener("shiro_download_started", refreshHistoryIfVisible);
+window.addEventListener("shiro_download_ended", refreshHistoryIfVisible);
+window.addEventListener("shiro_download_cancelled", refreshHistoryIfVisible);
 
 const pages = ["home", "history", "settings"];
 
 async function switchPage(pageId) {
-  const isPrivacyOn = localStorage.getItem("mori_privacy_lock") === "true";
-  const lockType = localStorage.getItem("mori_lock_type") || "none";
+  const isPrivacyOn = localStorage.getItem("shiro_privacy_lock") === "true";
+  const lockType = localStorage.getItem("shiro_lock_type") || "none";
 
   if (pageId === "history" && !isHistoryUnlocked) {
     if (isPrivacyOn && lockType !== "none") {
@@ -312,7 +312,7 @@ document.addEventListener(
       target.closest(".slider-container") ||
       target.closest(".media-slide") ||
       target.closest(".slider-wrapper") ||
-      target.closest(".mori-player-container") ||
+      target.closest(".shiro-player-container") ||
       target.closest(".modal-overlay") ||
       target.closest(".history-item-actions") ||
       target.closest("input") ||
@@ -338,7 +338,7 @@ document.addEventListener(
 
 // Initial Auto-Download Check
 setTimeout(() => {
-  const autoDownload = localStorage.getItem("mori_auto_download") === "true";
+  const autoDownload = localStorage.getItem("shiro_auto_download") === "true";
   if (autoDownload) {
     if (typeof handlePasteFromClipboard === "function") {
       handlePasteFromClipboard(true);
@@ -355,7 +355,7 @@ if (
 ) {
   App.addListener("backButton", () => {
     const fsPlayer = document.querySelector(
-      ".mori-player-container.mori-fullscreen",
+      ".shiro-player-container.shiro-fullscreen",
     );
     if (fsPlayer && typeof fsPlayer._exitFullscreen === "function") {
       fsPlayer._exitFullscreen();

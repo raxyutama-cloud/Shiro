@@ -27,11 +27,11 @@ import { getUserAgent } from "./utils/index.js";
 import { translations } from "./i18n/index.js";
 import { safeSetHistory } from "./modules/history.js";
 
-let currentLang = localStorage.getItem("mori_lang") || "en";
+let currentLang = localStorage.getItem("shiro_lang") || "en";
 let lang = translations[currentLang] || translations.en;
 
 function applyShareLanguage() {
-  currentLang = localStorage.getItem("mori_lang") || "en";
+  currentLang = localStorage.getItem("shiro_lang") || "en";
   lang = translations[currentLang] || translations.en;
   document.documentElement.lang = currentLang;
   document.documentElement.setAttribute(
@@ -156,11 +156,11 @@ function detectPlatform(url) {
 function initUI() {
   applyShareLanguage();
 
-  const theme = localStorage.getItem("mori_theme") || "dark";
+  const theme = localStorage.getItem("shiro_theme") || "dark";
   if (theme === "light") document.body.classList.add("light-theme");
   else document.body.classList.remove("light-theme");
 
-  const font = localStorage.getItem("mori_font") || "display";
+  const font = localStorage.getItem("shiro_font") || "display";
   document.body.classList.remove(
     "font-default",
     "font-jakarta",
@@ -170,14 +170,14 @@ function initUI() {
   );
   document.body.classList.add(`font-${font}`);
 
-  targetUrl = window.__MORI_SHARE_URL || "";
+  targetUrl = window.__SHIRO_SHARE_URL || "";
   if (!targetUrl) return;
 
   urlPreview.textContent = targetUrl;
   currentPlatform = detectPlatform(targetUrl);
   platformBadge.textContent = currentPlatform.toUpperCase();
 
-  const preferServer = localStorage.getItem("mori_prefer_server") || "ask";
+  const preferServer = localStorage.getItem("shiro_prefer_server") || "ask";
   if (SERVERS[currentPlatform]) {
     const list = SERVERS[currentPlatform];
     selectedServer = preferServer === "server2" ? list[1].id : list[0].id;
@@ -214,7 +214,7 @@ function renderServerPills(list) {
 }
 
 window.dismissPanel = function () {
-  if (window.MoriShareBridge?.dismiss) window.MoriShareBridge.dismiss();
+  if (window.ShiroShareBridge?.dismiss) window.ShiroShareBridge.dismiss();
 };
 
 window.cancelOrDismiss = function () {
@@ -227,8 +227,8 @@ window.cancelOrDismiss = function () {
 };
 
 window.showToast = function (msg) {
-  if (window.MoriShareBridge?.showToast) {
-    window.MoriShareBridge.showToast(msg);
+  if (window.ShiroShareBridge?.showToast) {
+    window.ShiroShareBridge.showToast(msg);
   } else {
     const toast = document.getElementById("toast");
     if (toast) {
@@ -404,7 +404,7 @@ function renderDownloadList(result) {
       <div class="dl-badge" style="flex-shrink: 0;">${downloadBadgeText}</div>
     `;
 
-    btn.onclick = () => triggerDownload(dl, result.title || "Mori_Media", idx);
+    btn.onclick = () => triggerDownload(dl, result.title || "Shiro_Media", idx);
     downloadList.appendChild(btn);
   });
 
@@ -428,7 +428,7 @@ async function triggerDownload(dlItem, title, idx) {
   try {
     if (finalUrl.startsWith("applemusic_resolve:")) {
       const payloadStr = finalUrl.replace("applemusic_resolve:", "");
-      const resRaw = window.MoriShareBridge.httpRequest(
+      const resRaw = window.ShiroShareBridge.httpRequest(
         JSON.stringify({
           url: "https://aplmate.com/action/track",
           method: "POST",
@@ -476,7 +476,7 @@ async function triggerDownload(dlItem, title, idx) {
     } else if (finalUrl.startsWith("spotidown_resolve:")) {
       const parts = finalUrl.replace("spotidown_resolve:", "").split("|||");
       const payloadStr = parts[0];
-      const resRaw = window.MoriShareBridge.httpRequest(
+      const resRaw = window.ShiroShareBridge.httpRequest(
         JSON.stringify({
           url: "https://spotidown.app/action/track",
           method: "POST",
@@ -517,7 +517,7 @@ async function triggerDownload(dlItem, title, idx) {
       const dataVal = parts[0];
       const tokenVal = parts[1];
       const BASE = "https://soundloaders.app";
-      const resRaw = window.MoriShareBridge.httpRequest(
+      const resRaw = window.ShiroShareBridge.httpRequest(
         JSON.stringify({
           url: BASE + "/action/tracks",
           method: "POST",
@@ -556,7 +556,7 @@ async function triggerDownload(dlItem, title, idx) {
       let downloadUrl = null;
 
       try {
-        const initRaw = window.MoriShareBridge.httpRequest(
+        const initRaw = window.ShiroShareBridge.httpRequest(
           JSON.stringify({
             url: "https://a.ymcdn.org/api/v1/init?p=y&23=1llum1n471",
             method: "GET",
@@ -574,7 +574,7 @@ async function triggerDownload(dlItem, title, idx) {
             : initRes.data;
 
         if (initData && !initData.error && initData.convertURL) {
-          const convRaw = window.MoriShareBridge.httpRequest(
+          const convRaw = window.ShiroShareBridge.httpRequest(
             JSON.stringify({
               url: `${initData.convertURL}&v=${ytId}&f=${format}`,
               method: "GET",
@@ -602,7 +602,7 @@ async function triggerDownload(dlItem, title, idx) {
               await new Promise((r) => setTimeout(r, 1500));
               if (!progUrl) break;
 
-              const progRaw = window.MoriShareBridge.httpRequest(
+              const progRaw = window.ShiroShareBridge.httpRequest(
                 JSON.stringify({
                   url: progUrl,
                   method: "GET",
@@ -641,7 +641,7 @@ async function triggerDownload(dlItem, title, idx) {
       // Fallback: convert1s / ytmp3.gg
       if (!downloadUrl) {
         try {
-          const convResRaw = window.MoriShareBridge.httpRequest(
+          const convResRaw = window.ShiroShareBridge.httpRequest(
             JSON.stringify({
               url: "https://hub.convert1s.com/api/download",
               method: "POST",
@@ -673,7 +673,7 @@ async function triggerDownload(dlItem, title, idx) {
             let pollCount = 0;
             while (!downloadUrl && pollCount < 30) {
               await new Promise((r) => setTimeout(r, 1500));
-              const pollRaw = window.MoriShareBridge.httpRequest(
+              const pollRaw = window.ShiroShareBridge.httpRequest(
                 JSON.stringify({
                   url: parsedConv.statusUrl,
                   method: "GET",
@@ -719,7 +719,7 @@ async function triggerDownload(dlItem, title, idx) {
     return;
   }
 
-  if (window.MoriShareBridge?.downloadFile) {
+  if (window.ShiroShareBridge?.downloadFile) {
     let dlHeaders = {
       Referer: targetUrl,
       "User-Agent": getUserAgent(),
@@ -744,7 +744,7 @@ async function triggerDownload(dlItem, title, idx) {
       dlHeaders.Origin = "https://ytmp3.mobi";
     }
 
-    window.MoriShareBridge.downloadFile(
+    window.ShiroShareBridge.downloadFile(
       finalUrl,
       filename,
       folder,
@@ -771,9 +771,9 @@ function getFolderForPlatform(platform) {
     bandcamp: "Bandcamp",
     pixiv: "Pixiv",
   };
-  const base = localStorage.getItem("mori_download_path") || "Mori";
+  const base = localStorage.getItem("shiro_download_path") || "Shiro";
   const sub = subfolders[platform] || "";
-  const autoFolder = localStorage.getItem("mori_auto_folder") !== "false";
+  const autoFolder = localStorage.getItem("shiro_auto_folder") !== "false";
   return autoFolder && sub ? `${base}/${sub}` : base;
 }
 
@@ -783,7 +783,7 @@ function generateFilename(title, type, index) {
     .trim();
 
   const isTrackType = /^\d+\.\s+/.test(cleanTypeLabel);
-  let effectiveTitle = title || "Mori_Media";
+  let effectiveTitle = title || "Shiro_Media";
   if (isTrackType) {
     effectiveTitle =
       cleanTypeLabel.replace(/^\d+\.\s+/, "").trim() || cleanTypeLabel;
@@ -804,7 +804,7 @@ function generateFilename(title, type, index) {
     .replace(/\s+/g, " ")
     .substring(0, 60);
 
-  if (!sanitized) sanitized = "Mori_Media";
+  if (!sanitized) sanitized = "Shiro_Media";
 
   let ext = "mp4";
   const t = (type || "").toLowerCase();
@@ -823,7 +823,7 @@ function generateFilename(title, type, index) {
 
   ext = ext.toLowerCase();
 
-  const template = localStorage.getItem("mori_filename") || "title";
+  const template = localStorage.getItem("shiro_filename") || "title";
   let finalName = `${sanitized}.${ext}`;
 
   if (template === "title-platform") {
@@ -870,9 +870,9 @@ function generateFilename(title, type, index) {
 
 // Minimal History Sync
 function saveHistory(result, url) {
-  if (localStorage.getItem("mori_incognito") === "true") return;
+  if (localStorage.getItem("shiro_incognito") === "true") return;
   try {
-    let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
     let cleanTitle = (result.title || "Content")
       .replace(/#[^\s#]+/g, "")
       .replace(/\s{2,}/g, " ")
@@ -906,8 +906,8 @@ function saveHistory(result, url) {
 
     const updated = history.slice(0, 100);
     safeSetHistory(updated);
-    if (window.MoriShareBridge?.savePendingHistory) {
-      window.MoriShareBridge.savePendingHistory(JSON.stringify(newItem));
+    if (window.ShiroShareBridge?.savePendingHistory) {
+      window.ShiroShareBridge.savePendingHistory(JSON.stringify(newItem));
     }
   } catch (err) {
     console.error("Save history error", err);
@@ -915,9 +915,9 @@ function saveHistory(result, url) {
 }
 
 function updateHistorySavedFile(filename, savedPath) {
-  if (localStorage.getItem("mori_incognito") === "true" || !targetUrl) return;
+  if (localStorage.getItem("shiro_incognito") === "true" || !targetUrl) return;
   try {
-    let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
     const isVideo = savedPath.toLowerCase().endsWith(".mp4");
     const isAudio =
       savedPath.toLowerCase().endsWith(".mp3") ||
@@ -940,8 +940,8 @@ function updateHistorySavedFile(filename, savedPath) {
       }
       history[0] = { ...first, localFiles, localUri: savedPath };
       safeSetHistory(history);
-      if (window.MoriShareBridge?.savePendingHistory) {
-        window.MoriShareBridge.savePendingHistory(JSON.stringify(history[0]));
+      if (window.ShiroShareBridge?.savePendingHistory) {
+        window.ShiroShareBridge.savePendingHistory(JSON.stringify(history[0]));
       }
     }
   } catch (err) {
@@ -981,10 +981,10 @@ window.onDownloadFailed = function (filename, error) {
   });
 };
 
-window.onMoriConfigReady = function () {
+window.onShiroConfigReady = function () {
   initUI();
 };
 
-if (window.__MORI_SHARE_URL) {
+if (window.__SHIRO_SHARE_URL) {
   initUI();
 }

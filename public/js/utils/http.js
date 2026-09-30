@@ -21,7 +21,7 @@ export const UA_PRESETS = {
 export const SAFARI_MOBILE_UA = UA_PRESETS.safari;
 
 export function getUserAgent() {
-  const mode = localStorage.getItem("mori_user_agent") || "default";
+  const mode = localStorage.getItem("shiro_user_agent") || "default";
   return UA_PRESETS[mode] || UA_PRESETS.default;
 }
 
@@ -132,12 +132,12 @@ export async function cleanupOrphanedTempFiles() {
   const directoriesToTry = ["EXTERNAL_STORAGE", "DOCUMENTS", "EXTERNAL"];
   const normalize = (val, fallback) => {
     const raw = (val || fallback).trim().replace(/^\/+/, "");
-    if (raw === "Mori") return "Download/Mori";
-    if (raw === "Mori/Music") return "Download/Mori/Music";
+    if (raw === "Shiro") return "Download/Shiro";
+    if (raw === "Shiro/Music") return "Download/Shiro/Music";
     return raw.toLowerCase().startsWith("download") ? raw : `Download/${raw}`;
   };
-  const videoPath = normalize(localStorage.getItem("mori_download_path"), "Download/Mori");
-  const musicPath = normalize(localStorage.getItem("mori_music_path"), "Download/Mori/Music");
+  const videoPath = normalize(localStorage.getItem("shiro_download_path"), "Download/Shiro");
+  const musicPath = normalize(localStorage.getItem("shiro_music_path"), "Download/Shiro/Music");
   const platforms = [
     "",
     "/TikTok",

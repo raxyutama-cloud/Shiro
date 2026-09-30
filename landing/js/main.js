@@ -604,7 +604,7 @@
     });
   }
 
-  const CACHE_KEY = "mori_gh_stars_count";
+  const CACHE_KEY = "shiro_gh_stars_count";
 
   let currentStars = null;
   try {
@@ -620,14 +620,14 @@
 
   // Fetch updated count; fallback to shields.io when GitHub API hits rate limit
   function fetchStars() {
-    return fetch("https://api.github.com/repos/coflyn/Mori")
+    return fetch("https://api.github.com/repos/raxyutama-cloud/Shiro")
       .then((res) => {
         if (!res.ok) throw new Error("GitHub API " + res.status);
         return res.json().then((d) => d.stargazers_count);
       })
       .catch(() => {
         return fetch(
-          "https://img.shields.io/github/stars/coflyn/Mori.json",
+          "https://img.shields.io/github/stars/raxyutama-cloud/Shiro.json",
         ).then((res) => {
           if (!res.ok) throw new Error("Shields API " + res.status);
           return res.json().then((d) => parseInt(d.value, 10));
@@ -654,8 +654,8 @@
   const container = document.getElementById("changelog-timeline");
   if (!container) return;
 
-  const CACHE_KEY = "mori_changelog_data";
-  const CACHE_TIME_KEY = "mori_changelog_time";
+  const CACHE_KEY = "shiro_changelog_data";
+  const CACHE_TIME_KEY = "shiro_changelog_time";
   const ONE_HOUR = 3600000;
 
   function formatDate(dateStr) {
@@ -769,8 +769,8 @@
       .join("");
   }
 
-  const GITHUB_RELEASE_KEY = "mori_latest_release_data";
-  const GITHUB_RELEASE_TIME = "mori_latest_release_time";
+  const GITHUB_RELEASE_KEY = "shiro_latest_release_data";
+  const GITHUB_RELEASE_TIME = "shiro_latest_release_time";
 
   function detectUserOS() {
     const ua = navigator.userAgent || "";
@@ -797,10 +797,10 @@
     const num = tag.replace(/^v/, "");
 
     const defaultLabels = {
-      android: `Mori v${num}.apk`,
-      macos: `Mori-v${num}-macOS-arm64.dmg`,
-      windows: `Mori-v${num}-Windows-x64-Setup.exe`,
-      ios: `Mori v${num}.ipa (AltStore / TrollStore)`,
+      android: `Shiro v${num}.apk`,
+      macos: `Shiro-v${num}-macOS-arm64.dmg`,
+      windows: `Shiro-v${num}-Windows-x64-Setup.exe`,
+      ios: `Shiro v${num}.ipa (AltStore / TrollStore)`,
     };
 
     document.querySelectorAll("[data-dl-file]").forEach((el) => {
@@ -815,7 +815,7 @@
       if (assets && assets[platform]) {
         card.href = assets[platform];
       } else {
-        card.href = `https://github.com/coflyn/Mori/releases/tag/${tag}`;
+        card.href = `https://github.com/raxyutama-cloud/Shiro/releases/tag/${tag}`;
       }
     });
 
@@ -848,7 +848,7 @@
       const targetUrl =
         assets && assets[os]
           ? assets[os]
-          : `https://github.com/coflyn/Mori/releases/tag/${tag}`;
+          : `https://github.com/raxyutama-cloud/Shiro/releases/tag/${tag}`;
 
       if (heroBtn) {
         heroBtn.textContent = osMeta[os].heroText;
@@ -869,7 +869,7 @@
         floatingBtn.href = "#download";
       }
       if (floatingText) {
-        floatingText.textContent = "Download Mori";
+        floatingText.textContent = "Download Shiro";
       }
     }
 
@@ -907,7 +907,7 @@
       }
     } catch (_) {}
 
-    fetch("https://api.github.com/repos/coflyn/Mori/releases/latest")
+    fetch("https://api.github.com/repos/raxyutama-cloud/Shiro/releases/latest")
       .then((res) => {
         if (!res.ok) throw new Error("Status " + res.status);
         return res.json();
@@ -968,7 +968,7 @@
     }
   } catch (_) {}
 
-  fetch("https://raw.githubusercontent.com/coflyn/Mori/main/CHANGELOG.md")
+  fetch("https://raw.githubusercontent.com/raxyutama-cloud/Shiro/main/CHANGELOG.md")
     .then((res) => {
       if (!res.ok) throw new Error("Status " + res.status);
       return res.text();
@@ -987,7 +987,7 @@
     .catch(() => {
       container.innerHTML = `
         <div class="changelog-loading">
-          <span>Unable to load updates live. <a href="https://github.com/coflyn/Mori/blob/main/CHANGELOG.md" target="_blank" rel="noopener">View full changelog on GitHub</a></span>
+          <span>Unable to load updates live. <a href="https://github.com/raxyutama-cloud/Shiro/blob/main/CHANGELOG.md" target="_blank" rel="noopener">View full changelog on GitHub</a></span>
         </div>`;
       syncDownloadRelease();
     });

@@ -8,9 +8,9 @@ export const SCRAPER_VERSION_URL = `https://raw.githubusercontent.com/${GITHUB_R
 export const SCRAPER_BIN_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/public/js/scrapers/bundle.js`;
 
 
-export const ACTIVE_SCRAPER_VERSION_KEY = "mori_active_scraper_version";
-export const PATCHED_SCRAPER_BIN_KEY = "mori_patched_scraper_bin";
-export const LAST_SCRAPER_CHECK_KEY = "mori_last_scraper_check";
+export const ACTIVE_SCRAPER_VERSION_KEY = "shiro_active_scraper_version";
+export const PATCHED_SCRAPER_BIN_KEY = "shiro_patched_scraper_bin";
+export const LAST_SCRAPER_CHECK_KEY = "shiro_last_scraper_check";
 
 export function getActiveScraperVersion() {
   const localVer = parseInt(
@@ -21,8 +21,8 @@ export function getActiveScraperVersion() {
   if (typeof BUNDLED_SCRAPER_VERSION === "number") {
     return BUNDLED_SCRAPER_VERSION;
   }
-  if (typeof window.__MORI_BUNDLED_SCRAPER_VERSION__ === "number") {
-    return window.__MORI_BUNDLED_SCRAPER_VERSION__;
+  if (typeof window.__SHIRO_BUNDLED_SCRAPER_VERSION__ === "number") {
+    return window.__SHIRO_BUNDLED_SCRAPER_VERSION__;
   }
   return 2;
 }
@@ -38,7 +38,7 @@ async function fetchRemoteJson(url) {
       url,
       headers: {
         Accept: "application/json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Shiro-App",
         "Cache-Control": "no-cache",
       },
     });
@@ -49,7 +49,7 @@ async function fetchRemoteJson(url) {
       method: "GET",
       headers: {
         Accept: "application/json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Shiro-App",
         "Cache-Control": "no-cache",
       },
     });
@@ -70,14 +70,14 @@ async function fetchRemoteText(url) {
   if (CapacitorHttp) {
     const res = await CapacitorHttp.get({
       url,
-      headers: { "Cache-Control": "no-cache", "User-Agent": "Mori-App" },
+      headers: { "Cache-Control": "no-cache", "User-Agent": "Shiro-App" },
     });
     return typeof res.data === "string" ? res.data : JSON.stringify(res.data);
   } else if (tauriInvoke) {
     const res = await tauriInvoke("tauri_http_request", {
       url,
       method: "GET",
-      headers: { "Cache-Control": "no-cache", "User-Agent": "Mori-App" },
+      headers: { "Cache-Control": "no-cache", "User-Agent": "Shiro-App" },
     });
     const rawData = res?.data || res?.body || res;
     return typeof rawData === "string" ? rawData : JSON.stringify(rawData);
@@ -126,7 +126,7 @@ export async function checkScraperUpdate(isManual = false) {
         actionLabel.textContent =
           translations[currentLang]?.["btn-update"] || "UPDATE";
       }
-      const skipKey = `mori_skip_scraper_update_v${remoteVer}`;
+      const skipKey = `shiro_skip_scraper_update_v${remoteVer}`;
       if (!isManual && localStorage.getItem(skipKey)) {
         return;
       }
@@ -173,7 +173,7 @@ export async function checkScraperUpdate(isManual = false) {
                 window.location.reload();
               }, 600);
             } catch (err) {
-              console.error("[Mori Scrapers OTA] Patch apply failed:", err);
+              console.error("[Shiro Scrapers OTA] Patch apply failed:", err);
               btn.disabled = false;
               btn.textContent = lang["btn-update"] || "UPDATE NOW";
               showToast?.("Failed to download scraper update");
@@ -208,7 +208,7 @@ export async function checkScraperUpdate(isManual = false) {
       }
     }
   } catch (err) {
-    console.warn("[Mori Scrapers OTA] Check failed:", err);
+    console.warn("[Shiro Scrapers OTA] Check failed:", err);
     if (actionLabel) actionLabel.textContent = origText;
     if (isManual) {
       const lang = translations[currentLang] || {};

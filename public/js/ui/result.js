@@ -26,12 +26,12 @@ export function renderMediaSlides(container, items, resultThumbnail) {
   if (!container) return;
 
   // Cleanup old players before clearing
-  container.querySelectorAll(".mori-player-container").forEach((pc) => {
+  container.querySelectorAll(".shiro-player-container").forEach((pc) => {
     if (pc._cleanup) pc._cleanup();
   });
   container.innerHTML = "";
 
-  const isDataSaver = localStorage.getItem("mori_data_saver") === "true";
+  const isDataSaver = localStorage.getItem("shiro_data_saver") === "true";
 
   items.forEach((dl, index) => {
     const slide = document.createElement("div");
@@ -141,8 +141,8 @@ export function renderMediaSlides(container, items, resultThumbnail) {
       const audio = document.createElement("audio");
       audio.controls = true;
       audio.style.width = "100%";
-      const autoPlaySetting = localStorage.getItem("mori_autoplay") !== "false";
-      const loopSetting = localStorage.getItem("mori_loop") !== "false";
+      const autoPlaySetting = localStorage.getItem("shiro_autoplay") !== "false";
+      const loopSetting = localStorage.getItem("shiro_loop") !== "false";
       audio.autoplay = false;
       audio.loop = loopSetting;
 
@@ -507,7 +507,7 @@ export function updateSliderUI() {
 
   slides.forEach((slide, index) => {
     const media = slide.querySelector("video, audio");
-    const playerContainer = slide.querySelector(".mori-player-container");
+    const playerContainer = slide.querySelector(".shiro-player-container");
     if (index === currentSlideIndex) {
       slide.classList.add("active");
       if (
@@ -516,8 +516,8 @@ export function updateSliderUI() {
       ) {
         playerContainer._tryAutoPlay();
       } else if (media) {
-        media.loop = localStorage.getItem("mori_loop") !== "false";
-        if (localStorage.getItem("mori_autoplay") !== "false") {
+        media.loop = localStorage.getItem("shiro_loop") !== "false";
+        if (localStorage.getItem("shiro_autoplay") !== "false") {
           if (media.paused) {
             const playPromise = media.play();
             if (playPromise !== undefined) {
@@ -534,7 +534,7 @@ export function updateSliderUI() {
                     err,
                   );
                   media.muted = true;
-                  const pc = media.closest(".mori-player-container");
+                  const pc = media.closest(".shiro-player-container");
                   if (pc) {
                     const unmute = pc.querySelector(".unmute-icon");
                     const mute = pc.querySelector(".mute-icon");
@@ -819,14 +819,14 @@ export function renderResult(result, originalUrl) {
         // If downloading, act as CANCEL
         if (isDownloadingAll) {
           playlistCancelled = true;
-          window._moriDownloadCancelled = true;
+          window._shiroDownloadCancelled = true;
           return;
         }
 
         isDownloadingAll = true;
         playlistCancelled = false;
-        window._moriDownloadCancelled = false;
-        window._moriPlaylistDownloading = true;
+        window._shiroDownloadCancelled = false;
+        window._shiroPlaylistDownloading = true;
         allBtn.disabled = false; // keep enabled to act as Cancel
 
         // Keep screen awake throughout playlist download
@@ -856,16 +856,16 @@ export function renderResult(result, originalUrl) {
         let currentFailedIndices = [];
 
         // Start Foreground Service notification
-        if (window.MoriMainBridge?.startDownloadService) {
+        if (window.ShiroMainBridge?.startDownloadService) {
           try {
-            window.MoriMainBridge.startDownloadService(
+            window.ShiroMainBridge.startDownloadService(
               `Downloading Playlist (1/${indicesToProcess.length})...`,
             );
           } catch (_) {}
         }
 
         const concurrentSetting =
-          parseInt(localStorage.getItem("mori_concurrent") || "1", 10) || 1;
+          parseInt(localStorage.getItem("shiro_concurrent") || "1", 10) || 1;
         // Honor full concurrent limit up to 5 without capping audio/playlist to 3
         const concurrentLimit = Math.max(1, Math.min(5, concurrentSetting));
 
@@ -923,9 +923,9 @@ export function renderResult(result, originalUrl) {
                   titleSpan.textContent = `${progressStr} ${completedCount}/${indicesToProcess.length}`;
                 }
 
-                if (window.MoriMainBridge?.startDownloadService) {
+                if (window.ShiroMainBridge?.startDownloadService) {
                   try {
-                    window.MoriMainBridge.startDownloadService(
+                    window.ShiroMainBridge.startDownloadService(
                       `Downloading (${completedCount}/${indicesToProcess.length}): ${cleanLabel || result.title}`,
                     );
                   } catch (_) {}
@@ -963,12 +963,12 @@ export function renderResult(result, originalUrl) {
             }
           }
         } finally {
-          window._moriPlaylistDownloading = false;
+          window._shiroPlaylistDownloading = false;
           releaseWakeLock();
 
-          if (window.MoriMainBridge?.stopDownloadService) {
+          if (window.ShiroMainBridge?.stopDownloadService) {
             try {
-              window.MoriMainBridge.stopDownloadService();
+              window.ShiroMainBridge.stopDownloadService();
             } catch (_) {}
           }
         }
@@ -1002,9 +1002,9 @@ export function renderResult(result, originalUrl) {
             ).replace("${count}", total);
             showToast(completeMsg);
 
-            if (window.MoriMainBridge?.showCompleteNotification) {
+            if (window.ShiroMainBridge?.showCompleteNotification) {
               try {
-                window.MoriMainBridge.showCompleteNotification(
+                window.ShiroMainBridge.showCompleteNotification(
                   result.title || "Playlist",
                   t("notif-all-downloaded", { total }),
                 );
@@ -1045,7 +1045,7 @@ export function renderResult(result, originalUrl) {
           }
         }
         playlistCancelled = false;
-        window._moriDownloadCancelled = false;
+        window._shiroDownloadCancelled = false;
       });
 
       downloadList.appendChild(allBtn);
@@ -1124,9 +1124,9 @@ export async function exportGalleryToPdf(title, items) {
 
     // Acquire Wake Lock & Start Native Foreground Service for background protection
     if (typeof requestWakeLock === "function") requestWakeLock();
-    if (window.MoriMainBridge?.startDownloadService) {
+    if (window.ShiroMainBridge?.startDownloadService) {
       try {
-        window.MoriMainBridge.startDownloadService("Exporting PDF Gallery...");
+        window.ShiroMainBridge.startDownloadService("Exporting PDF Gallery...");
       } catch (e) {}
     }
 
@@ -1315,12 +1315,12 @@ export async function exportGalleryToPdf(title, items) {
 
     // Dynamic folder structure for PDF exports
     let pdfSubfolder = (
-      localStorage.getItem("mori_download_path") || "Download/Mori"
+      localStorage.getItem("shiro_download_path") || "Download/Shiro"
     ).trim();
-    if (pdfSubfolder === "Mori") {
-      pdfSubfolder = "Download/Mori";
+    if (pdfSubfolder === "Shiro") {
+      pdfSubfolder = "Download/Shiro";
     }
-    if (localStorage.getItem("mori_auto_folder") !== "false") {
+    if (localStorage.getItem("shiro_auto_folder") !== "false") {
       const firstUrl = (items[0]?.url || "").toLowerCase();
       let platformFolder = "Other";
       if (
@@ -1410,9 +1410,9 @@ export async function exportGalleryToPdf(title, items) {
           });
           showToast(translations[currentLang]["pdf-toast-saved"]);
 
-          if (window.MoriMainBridge?.showCompleteNotification) {
+          if (window.ShiroMainBridge?.showCompleteNotification) {
             try {
-              window.MoriMainBridge.showCompleteNotification(
+              window.ShiroMainBridge.showCompleteNotification(
                 "PDF Gallery Complete ✓",
                 targetPdfPath,
               );
@@ -1444,7 +1444,7 @@ export async function exportGalleryToPdf(title, items) {
           savedTauri = true;
           showToast(
             translations[currentLang]["pdf-toast-saved"] ||
-              "PDF saved to Mori folder!",
+              "PDF saved to Shiro folder!",
           );
         } catch (e) {
           console.warn(
@@ -1470,16 +1470,16 @@ export async function exportGalleryToPdf(title, items) {
         ": " +
         (err.message.includes("memory") ? "Out of memory" : err.message),
     );
-    if (window.MoriMainBridge?.showFailedNotification) {
+    if (window.ShiroMainBridge?.showFailedNotification) {
       try {
-        window.MoriMainBridge.showFailedNotification("PDF Export", err.message);
+        window.ShiroMainBridge.showFailedNotification("PDF Export", err.message);
       } catch (e) {}
     }
   } finally {
     if (typeof releaseWakeLock === "function") releaseWakeLock();
-    if (window.MoriMainBridge?.stopDownloadService) {
+    if (window.ShiroMainBridge?.stopDownloadService) {
       try {
-        window.MoriMainBridge.stopDownloadService();
+        window.ShiroMainBridge.stopDownloadService();
       } catch (e) {}
     }
   }

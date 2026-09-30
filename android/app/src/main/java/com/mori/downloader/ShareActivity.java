@@ -58,8 +58,8 @@ public class ShareActivity extends AppCompatActivity {
         } catch (Throwable ignored) {}
     }
 
-    private static final String TAG = "MoriShare";
-    private static final String CHANNEL_ID = "mori_download";
+    private static final String TAG = "ShiroShare";
+    private static final String CHANNEL_ID = "shiro_download";
     private static final int NOTIF_ID_BASE = 4000;
 
     private WebView webView;
@@ -145,9 +145,9 @@ public class ShareActivity extends AppCompatActivity {
         settings.setMediaPlaybackRequiresUserGesture(false);
 
         // Expose JavascriptInterface
-        MoriShareBridge shareBridge = new MoriShareBridge();
-        webView.addJavascriptInterface(shareBridge, "MoriShareBridge");
-        webView.addJavascriptInterface(shareBridge, "MoriMainBridge");
+        ShiroShareBridge shareBridge = new ShiroShareBridge();
+        webView.addJavascriptInterface(shareBridge, "ShiroShareBridge");
+        webView.addJavascriptInterface(shareBridge, "ShiroMainBridge");
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -167,38 +167,38 @@ public class ShareActivity extends AppCompatActivity {
 
     private void injectConfig() {
         SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-        String lang = prefs.getString("mori_lang", "en");
-        String theme = prefs.getString("mori_theme", "dark");
-        String font = prefs.getString("mori_font", "display");
-        String preferServer = prefs.getString("mori_prefer_server", "ask");
-        String downloadPath = prefs.getString("mori_download_path", "Mori");
-        String autoFolder = prefs.getString("mori_auto_folder", "true");
-        String filenameTemplate = prefs.getString("mori_filename", "title");
+        String lang = prefs.getString("shiro_lang", "en");
+        String theme = prefs.getString("shiro_theme", "dark");
+        String font = prefs.getString("shiro_font", "display");
+        String preferServer = prefs.getString("shiro_prefer_server", "ask");
+        String downloadPath = prefs.getString("shiro_download_path", "Shiro");
+        String autoFolder = prefs.getString("shiro_auto_folder", "true");
+        String filenameTemplate = prefs.getString("shiro_filename", "title");
 
         String escapedUrl = sharedUrl
                 .replace("\\", "\\\\")
                 .replace("'", "\\'")
                 .replace("\n", " ")
                 .replace("\r", "");
-        String js = "window.__MORI_SHARE_URL = '" + escapedUrl + "';" +
+        String js = "window.__SHIRO_SHARE_URL = '" + escapedUrl + "';" +
                 "try { " +
-                "  localStorage.setItem('mori_lang', '" + lang + "');" +
-                "  localStorage.setItem('mori_theme', '" + theme + "');" +
-                "  localStorage.setItem('mori_font', '" + font + "');" +
-                "  localStorage.setItem('mori_prefer_server', '" + preferServer + "');" +
-                "  localStorage.setItem('mori_download_path', '" + downloadPath + "');" +
-                "  localStorage.setItem('mori_auto_folder', '" + autoFolder + "');" +
-                "  localStorage.setItem('mori_filename', '" + filenameTemplate + "');" +
+                "  localStorage.setItem('shiro_lang', '" + lang + "');" +
+                "  localStorage.setItem('shiro_theme', '" + theme + "');" +
+                "  localStorage.setItem('shiro_font', '" + font + "');" +
+                "  localStorage.setItem('shiro_prefer_server', '" + preferServer + "');" +
+                "  localStorage.setItem('shiro_download_path', '" + downloadPath + "');" +
+                "  localStorage.setItem('shiro_auto_folder', '" + autoFolder + "');" +
+                "  localStorage.setItem('shiro_filename', '" + filenameTemplate + "');" +
                 "} catch(e) {};" +
-                "if (typeof window.onMoriConfigReady === 'function') window.onMoriConfigReady();";
+                "if (typeof window.onShiroConfigReady === 'function') window.onShiroConfigReady();";
         webView.evaluateJavascript(js, null);
     }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel ch = new NotificationChannel(
-                    CHANNEL_ID, "Mori Downloads", NotificationManager.IMPORTANCE_DEFAULT);
-            ch.setDescription("Mori download notifications");
+                    CHANNEL_ID, "Shiro Downloads", NotificationManager.IMPORTANCE_DEFAULT);
+            ch.setDescription("Shiro download notifications");
             NotificationManager nm = getSystemService(NotificationManager.class);
             if (nm != null) nm.createNotificationChannel(ch);
         }
@@ -228,7 +228,7 @@ public class ShareActivity extends AppCompatActivity {
         nm.notify(NOTIF_ID_BASE + (notifCounter++), b.build());
     }
 
-    public class MoriShareBridge {
+    public class ShiroShareBridge {
         @JavascriptInterface
         public String getEngineSecurityKey(String challenge) {
             try {
@@ -264,9 +264,9 @@ public class ShareActivity extends AppCompatActivity {
             executor.execute(() -> {
                 String result = httpRequest(optionsJson);
                 mainHandler.post(() -> {
-                    String js = "if (window.__moriShareCallbacks && window.__moriShareCallbacks['" + reqId + "']) { " +
-                                "  window.__moriShareCallbacks['" + reqId + "'](" + JSONObject.quote(result) + "); " +
-                                "  delete window.__moriShareCallbacks['" + reqId + "']; " +
+                    String js = "if (window.__shiroShareCallbacks && window.__shiroShareCallbacks['" + reqId + "']) { " +
+                                "  window.__shiroShareCallbacks['" + reqId + "'](" + JSONObject.quote(result) + "); " +
+                                "  delete window.__shiroShareCallbacks['" + reqId + "']; " +
                                 "}";
                     webView.evaluateJavascript(js, null);
                 });
@@ -275,7 +275,7 @@ public class ShareActivity extends AppCompatActivity {
 
         /**
          * Synchronous HTTP request bridge (mirrors CapacitorHttp API shape).
-         * Called from httpHelper.js via window.MoriShareBridge.
+         * Called from httpHelper.js via window.ShiroShareBridge.
          * NOTE: Must be called off the main thread (Android enforces this).
          *
          * @param optionsJson JSON: { url, method, headers, data, params, responseType }
@@ -362,7 +362,7 @@ public class ShareActivity extends AppCompatActivity {
          *
          * @param url         Direct media URL
          * @param filename    Target filename (will be sanitized)
-         * @param folder      Subfolder under Downloads/ (e.g. "Mori/TikTok")
+         * @param folder      Subfolder under Downloads/ (e.g. "Shiro/TikTok")
          * @param headersJson Extra headers JSON or empty string
          * @param title       Title shown in completion notification
          */
@@ -413,7 +413,7 @@ public class ShareActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Resolve custom target directory across storage (e.g. Movies/Mori, Music/Mori, Download/Mori, or custom)
+                    // Resolve custom target directory across storage (e.g. Movies/Shiro, Music/Shiro, Download/Shiro, or custom)
                     boolean hasAllFiles = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         hasAllFiles = Environment.isExternalStorageManager();
@@ -428,15 +428,15 @@ public class ShareActivity extends AppCompatActivity {
                             targetDir = new File(Environment.getExternalStorageDirectory(), trimmed);
                         }
                     } else {
-                        String sub = "Mori";
+                        String sub = "Shiro";
                         if (folder != null && folder.trim().toLowerCase().startsWith("download/")) {
                             sub = folder.trim().substring(9).trim();
                         }
-                        targetDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), sub.isEmpty() ? "Mori" : sub);
+                        targetDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), sub.isEmpty() ? "Shiro" : sub);
                     }
                     if (!targetDir.exists()) {
                         if (!targetDir.mkdirs()) {
-                            targetDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Mori");
+                            targetDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Shiro");
                             targetDir.mkdirs();
                         }
                     }
@@ -539,7 +539,7 @@ public class ShareActivity extends AppCompatActivity {
                     // Native SharedPreferences update for background history persistence
                     try {
                         SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                        String existingListStr = prefs.getString("mori_pending_share_history_list", "[]");
+                        String existingListStr = prefs.getString("shiro_pending_share_history_list", "[]");
                         org.json.JSONArray list;
                         try {
                             list = new org.json.JSONArray(existingListStr);
@@ -597,7 +597,7 @@ public class ShareActivity extends AppCompatActivity {
                             list.put(newItem);
                         }
 
-                        prefs.edit().putString("mori_pending_share_history_list", list.toString()).commit();
+                        prefs.edit().putString("shiro_pending_share_history_list", list.toString()).commit();
                     } catch (Exception e) {
                         Log.e(TAG, "Native update pending history error: " + e.getMessage());
                     }
@@ -637,7 +637,7 @@ public class ShareActivity extends AppCompatActivity {
             try {
                 if (itemJson == null || itemJson.trim().isEmpty()) return;
                 SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                String existingListStr = prefs.getString("mori_pending_share_history_list", "[]");
+                String existingListStr = prefs.getString("shiro_pending_share_history_list", "[]");
                 org.json.JSONArray list;
                 try {
                     list = new org.json.JSONArray(existingListStr);
@@ -650,7 +650,7 @@ public class ShareActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     list.put(itemJson);
                 }
-                prefs.edit().putString("mori_pending_share_history_list", list.toString()).commit();
+                prefs.edit().putString("shiro_pending_share_history_list", list.toString()).commit();
             } catch (Exception e) {
                 Log.e(TAG, "savePendingHistory error: " + e.getMessage());
             }
@@ -660,7 +660,7 @@ public class ShareActivity extends AppCompatActivity {
         public String getPendingHistoryList() {
             try {
                 SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                return prefs.getString("mori_pending_share_history_list", "[]");
+                return prefs.getString("shiro_pending_share_history_list", "[]");
             } catch (Exception e) {
                 return "[]";
             }
@@ -670,7 +670,7 @@ public class ShareActivity extends AppCompatActivity {
         public void clearPendingHistoryList() {
             try {
                 SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                prefs.edit().remove("mori_pending_share_history_list").commit();
+                prefs.edit().remove("shiro_pending_share_history_list").commit();
             } catch (Exception ignored) {}
         }
 
@@ -700,12 +700,12 @@ public class ShareActivity extends AppCompatActivity {
     }
     
     private String sanitize(String name) {
-        if (name == null) return "Mori_Media";
+        if (name == null) return "Shiro_Media";
         String clean = name.replaceAll("[\\\\/:*?\"<>|]", "_").trim();
         // Remove leading dots to prevent creating Android hidden files (.filename)
         while (clean.startsWith(".")) {
             clean = clean.substring(1).trim();
         }
-        return clean.isEmpty() ? "Mori_Media" : clean;
+        return clean.isEmpty() ? "Shiro_Media" : clean;
     }
 }

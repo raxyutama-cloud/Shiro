@@ -22,13 +22,13 @@ import { handlePostDownload } from "../downloader/postProcess.js";
 import { downloadBubble } from "./downloadBubble.js";
 
 export function cancelCurrentDownload() {
-  window._moriDownloadCancelled = true;
+  window._shiroDownloadCancelled = true;
   // Dispatch event so history spinner can be cleared
-  window.dispatchEvent(new CustomEvent("mori_download_cancelled"));
+  window.dispatchEvent(new CustomEvent("shiro_download_cancelled"));
 }
 
 // Expose globally so cancellation can be called from anywhere
-window._moriCancelDownload = cancelCurrentDownload;
+window._shiroCancelDownload = cancelCurrentDownload;
 
 function handleCancelCleanup(btn, originalContent, progressContainer) {
   if (btn) {
@@ -86,16 +86,16 @@ export async function startNativeDownload(
   }
 
   if (resetCancelFlag) {
-    window._moriDownloadCancelled = false;
+    window._shiroDownloadCancelled = false;
   }
   // If batch already cancelled, bail immediately
-  if (window._moriDownloadCancelled) {
+  if (window._shiroDownloadCancelled) {
     return { success: false, error: "Cancelled" };
   }
 
-  window._moriActiveDownloadUrl = sourceUrl || url;
+  window._shiroActiveDownloadUrl = sourceUrl || url;
   window.dispatchEvent(
-    new CustomEvent("mori_download_started", {
+    new CustomEvent("shiro_download_started", {
       detail: { url: sourceUrl || url },
     }),
   );
@@ -148,19 +148,19 @@ export async function startNativeDownload(
     return "Media";
   })();
 
-  if (window._moriActiveSimInterval) {
-    clearInterval(window._moriActiveSimInterval);
-    window._moriActiveSimInterval = null;
+  if (window._shiroActiveSimInterval) {
+    clearInterval(window._shiroActiveSimInterval);
+    window._shiroActiveSimInterval = null;
   }
 
-  window._moriActiveDownloadsCount =
-    (window._moriActiveDownloadsCount || 0) + 1;
+  window._shiroActiveDownloadsCount =
+    (window._shiroActiveDownloadsCount || 0) + 1;
 
-  const hideProgress = localStorage.getItem("mori_hide_progress") === "true";
+  const hideProgress = localStorage.getItem("shiro_hide_progress") === "true";
   const isMultiDownload =
-    window._moriPlaylistDownloading || window._moriActiveDownloadsCount > 1;
+    window._shiroPlaylistDownloading || window._shiroActiveDownloadsCount > 1;
 
-  let effectiveTitle = title || "Mori Media";
+  let effectiveTitle = title || "Shiro Media";
   const dlId = `dl_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
   let itemCancelled = false;
 
@@ -196,9 +196,9 @@ export async function startNativeDownload(
 
     // Acquire Wake Lock & Start Native Foreground Service
     requestWakeLock();
-    if (window.MoriMainBridge?.startDownloadService) {
+    if (window.ShiroMainBridge?.startDownloadService) {
       try {
-        window.MoriMainBridge.startDownloadService(
+        window.ShiroMainBridge.startDownloadService(
           `Downloading ${platformLabel} ${type || ""}`,
         );
       } catch (e) {
@@ -219,7 +219,7 @@ export async function startNativeDownload(
 
     let simProgress = 0;
     let realProgressReceived = false;
-    window._moriActiveSimInterval = setInterval(() => {
+    window._shiroActiveSimInterval = setInterval(() => {
       if (realProgressReceived) return;
       if (simProgress < 50) {
         simProgress += 6 + Math.random() * 4;
@@ -233,17 +233,17 @@ export async function startNativeDownload(
     }, 160);
 
     // Remove any existing listeners first to avoid double-firing
-    if (window._moriProgressListener) {
+    if (window._shiroProgressListener) {
       try {
-        await window._moriProgressListener.remove();
+        await window._shiroProgressListener.remove();
       } catch (_) {}
-      window._moriProgressListener = null;
+      window._shiroProgressListener = null;
     }
 
     // Listen for real progress if Filesystem exists
     if (Filesystem?.addListener) {
       try {
-        window._moriProgressListener = await Filesystem.addListener(
+        window._shiroProgressListener = await Filesystem.addListener(
           "downloadProgress",
           (progress) => {
             realProgressReceived = true;
@@ -280,24 +280,24 @@ export async function startNativeDownload(
     let fileName = generateFileName(sanitizedTitle, ext, sourceUrl, url);
 
     const isAudio = /mp3|audio|128k|48k|m4a|wav|flac/i.test(type);
-    const rawVideoFolder = (localStorage.getItem("mori_download_path") || "").trim();
-    const rawMusicFolder = (localStorage.getItem("mori_music_path") || "").trim();
+    const rawVideoFolder = (localStorage.getItem("shiro_download_path") || "").trim();
+    const rawMusicFolder = (localStorage.getItem("shiro_music_path") || "").trim();
 
     const isAndroid = window.Capacitor?.getPlatform?.() === "android";
-    const hasAllFiles = isAndroid && window.MoriMainBridge?.hasAllFilesPermission
-      ? window.MoriMainBridge.hasAllFilesPermission()
+    const hasAllFiles = isAndroid && window.ShiroMainBridge?.hasAllFilesPermission
+      ? window.ShiroMainBridge.hasAllFilesPermission()
       : true;
 
-    const defaultVideoFolder = "Download/Mori";
-    const defaultMusicFolder = isAndroid ? "Download/Mori/Music" : "Music/Mori";
+    const defaultVideoFolder = "Download/Shiro";
+    const defaultMusicFolder = isAndroid ? "Download/Shiro/Music" : "Music/Shiro";
 
     let targetFolder = isAudio
       ? (rawMusicFolder || defaultMusicFolder)
       : (rawVideoFolder || defaultVideoFolder);
 
-    if (targetFolder === "Mori") {
+    if (targetFolder === "Shiro") {
       targetFolder = defaultVideoFolder;
-    } else if (targetFolder === "Mori/Music") {
+    } else if (targetFolder === "Shiro/Music") {
       targetFolder = defaultMusicFolder;
     }
 
@@ -306,17 +306,17 @@ export async function startNativeDownload(
       (isAudio ? defaultMusicFolder : defaultVideoFolder);
 
     // Android Scoped Storage fallback:
-    // If All Files Access is not granted, automatically save into Download/Mori default
+    // If All Files Access is not granted, automatically save into Download/Shiro default
     if (isAndroid && !hasAllFiles) {
       if (!targetFolder.toLowerCase().startsWith("download")) {
-        targetFolder = isAudio ? "Download/Mori/Music" : "Download/Mori";
+        targetFolder = isAudio ? "Download/Shiro/Music" : "Download/Shiro";
       }
     }
 
     let fullPath = targetFolder;
 
     // Auto-Categorize Subfolder per Platform
-    if (localStorage.getItem("mori_auto_folder") !== "false") {
+    if (localStorage.getItem("shiro_auto_folder") !== "false") {
       const platformFolder = detectPlatformFolder(sourceUrl, url);
       fullPath = `${fullPath}/${platformFolder}`;
     }
@@ -353,7 +353,7 @@ export async function startNativeDownload(
     }
 
     const checkCancelled = () =>
-      Boolean(window._moriDownloadCancelled || itemCancelled);
+      Boolean(window._shiroDownloadCancelled || itemCancelled);
 
     if (checkCancelled()) {
       downloadBubble.cancelDownload(dlId);
@@ -400,9 +400,9 @@ export async function startNativeDownload(
       return { success: false, error: "Cancelled" };
     }
 
-    if (window._moriActiveSimInterval) {
-      clearInterval(window._moriActiveSimInterval);
-      window._moriActiveSimInterval = null;
+    if (window._shiroActiveSimInterval) {
+      clearInterval(window._shiroActiveSimInterval);
+      window._shiroActiveSimInterval = null;
     }
 
     updateProgress(100, "Downloading...");
@@ -433,9 +433,9 @@ export async function startNativeDownload(
     return postRes;
   } catch (err) {
     console.error("Download failed", err);
-    if (window._moriActiveSimInterval) {
-      clearInterval(window._moriActiveSimInterval);
-      window._moriActiveSimInterval = null;
+    if (window._shiroActiveSimInterval) {
+      clearInterval(window._shiroActiveSimInterval);
+      window._shiroActiveSimInterval = null;
     }
 
     let errorMsg = err?.message || "Download failed";
@@ -453,11 +453,11 @@ export async function startNativeDownload(
 
     // Trigger System Tray Notification when download fails
     if (
-      !window._moriPlaylistDownloading &&
-      window.MoriMainBridge?.showFailedNotification
+      !window._shiroPlaylistDownloading &&
+      window.ShiroMainBridge?.showFailedNotification
     ) {
       try {
-        window.MoriMainBridge.showFailedNotification(
+        window.ShiroMainBridge.showFailedNotification(
           effectiveTitle || "Media",
           errorMsg,
         );
@@ -468,7 +468,7 @@ export async function startNativeDownload(
       btn.disabled = false;
       const b = btn.querySelector(".dl-badge");
       if (b) {
-        if (window._moriPlaylistDownloading) {
+        if (window._shiroPlaylistDownloading) {
           b.textContent = t("status-failed");
           b.style.backgroundColor = "var(--color-danger, #ef4444)";
           b.style.color = "#ffffff";
@@ -480,7 +480,7 @@ export async function startNativeDownload(
         btn.innerHTML = originalContent;
       }
     }
-    if (!window._moriPlaylistDownloading && progressContainer) {
+    if (!window._shiroPlaylistDownloading && progressContainer) {
       progressContainer.classList.add("hidden");
     }
 
@@ -489,27 +489,27 @@ export async function startNativeDownload(
       error: errorMsg,
     };
   } finally {
-    window._moriActiveDownloadsCount = Math.max(
+    window._shiroActiveDownloadsCount = Math.max(
       0,
-      (window._moriActiveDownloadsCount || 1) - 1,
+      (window._shiroActiveDownloadsCount || 1) - 1,
     );
-    window._moriActiveDownloadUrl = null;
-    window.dispatchEvent(new CustomEvent("mori_download_ended"));
-    if (!window._moriPlaylistDownloading) {
+    window._shiroActiveDownloadUrl = null;
+    window.dispatchEvent(new CustomEvent("shiro_download_ended"));
+    if (!window._shiroPlaylistDownloading) {
       releaseWakeLock();
-      if (window.MoriMainBridge?.stopDownloadService) {
+      if (window.ShiroMainBridge?.stopDownloadService) {
         try {
-          window.MoriMainBridge.stopDownloadService();
+          window.ShiroMainBridge.stopDownloadService();
         } catch (_) {}
       }
     }
-    if (window._moriActiveSimInterval) {
-      clearInterval(window._moriActiveSimInterval);
-      window._moriActiveSimInterval = null;
+    if (window._shiroActiveSimInterval) {
+      clearInterval(window._shiroActiveSimInterval);
+      window._shiroActiveSimInterval = null;
     }
-    if (window._moriProgressListener) {
-      await window._moriProgressListener.remove();
-      window._moriProgressListener = null;
+    if (window._shiroProgressListener) {
+      await window._shiroProgressListener.remove();
+      window._shiroProgressListener = null;
     }
   }
 }

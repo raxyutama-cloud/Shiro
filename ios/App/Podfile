@@ -19,7 +19,12 @@ def capacitor_pods
   pod 'CapacitorNetwork', :path => '../../node_modules/@capacitor/network'
   pod 'CapacitorShare', :path => '../../node_modules/@capacitor/share'
   pod 'CapgoCapacitorNativeBiometric', :path => '../../node_modules/@capgo/capacitor-native-biometric'
-  pod 'MoriSecurity', :path => '../../packages/mori-security'
+  # The private security pod source is not part of this repository.
+  # Add packages/shiro-security locally (or in CI) to re-enable it; the app
+  # falls back to canvas thumbnails when this plugin is absent.
+  if File.exist?('../../packages/shiro-security')
+    pod 'ShiroSecurity', :path => '../../packages/shiro-security'
+  end
 end
 
 target 'App' do

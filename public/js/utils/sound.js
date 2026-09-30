@@ -132,9 +132,9 @@ export function previewSound(packName) {
 
 export function playCompletionSound() {
   const isSoundEnabled =
-    localStorage.getItem("mori_download_sound") !== "false";
+    localStorage.getItem("shiro_download_sound") !== "false";
   if (isSoundEnabled) {
-    const pack = localStorage.getItem("mori_sound_pack") || "chime";
+    const pack = localStorage.getItem("shiro_sound_pack") || "chime";
     playSynthesizedSound(pack);
   }
 

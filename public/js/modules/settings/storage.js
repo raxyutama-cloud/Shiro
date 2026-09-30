@@ -31,17 +31,17 @@ export function formatPathDisplay(pathStr) {
 }
 
 export let customPath = (() => {
-  const p = localStorage.getItem("mori_download_path");
-  if (!p || p === "Mori") return "Download/Mori";
+  const p = localStorage.getItem("shiro_download_path");
+  if (!p || p === "Shiro") return "Download/Shiro";
   return normalizeSavedPath(p);
 })();
 
 export let customMusicPath = (() => {
-  const p = localStorage.getItem("mori_music_path");
-  if (!p || p === "Mori/Music" || p === "Music/Mori") {
+  const p = localStorage.getItem("shiro_music_path");
+  if (!p || p === "Shiro/Music" || p === "Music/Shiro") {
     const isAndroid = window.Capacitor?.getPlatform?.() === "android";
-    if (isAndroid) return "Download/Mori/Music";
-    return p || "Music/Mori";
+    if (isAndroid) return "Download/Shiro/Music";
+    return p || "Music/Shiro";
   }
   return normalizeSavedPath(p);
 })();
@@ -49,9 +49,9 @@ export let customMusicPath = (() => {
 export function updateDlStatsDisplay() {
   const el = document.getElementById("historyDlStatsVal");
   const historyEl = document.getElementById("historyItemsCountVal");
-  const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  const history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
   const storedCount = parseInt(
-    localStorage.getItem("mori_dl_count") || "0",
+    localStorage.getItem("shiro_dl_count") || "0",
     10,
   );
   const count = Math.max(storedCount, history.length);
@@ -60,12 +60,12 @@ export function updateDlStatsDisplay() {
 }
 
 export function checkAutoClearDays() {
-  const daysVal = localStorage.getItem("mori_auto_clear_days") || "off";
+  const daysVal = localStorage.getItem("shiro_auto_clear_days") || "off";
   if (daysVal === "off") return;
   const days = parseInt(daysVal, 10);
   if (isNaN(days) || days <= 0) return;
   const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
   const initialCount = history.length;
   const filtered = history.filter((item) => {
     const time =
@@ -108,7 +108,7 @@ export async function updateStorageInfo() {
     if (tauriInvoke) {
       try {
         const vSize = await tauriInvoke("tauri_get_folder_size", {
-          folder: customPath || "Download/Mori",
+          folder: customPath || "Download/Shiro",
         });
         if (typeof vSize === "number") totalSize += vSize;
 
@@ -123,8 +123,8 @@ export async function updateStorageInfo() {
       }
     } else if (Filesystem) {
       totalSize += await getFolderSize("", "CACHE");
-      const vPath = customPath || "Download/Mori";
-      const mPath = customMusicPath || "Music/Mori";
+      const vPath = customPath || "Download/Shiro";
+      const mPath = customMusicPath || "Music/Shiro";
       const primaryV = await getFolderSize(vPath, "EXTERNAL_STORAGE");
       const legacyV = await getFolderSize(vPath, "EXTERNAL");
       totalSize += Math.max(primaryV, legacyV);
@@ -146,7 +146,7 @@ export async function updateStorageInfo() {
 export async function clearCacheSilently() {
   if (!Filesystem) return;
   try {
-    const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    const history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
     const activeThumbs = new Set(
       history
         .map((item) => item.thumbnail)
@@ -220,8 +220,8 @@ export function initStorageSettings() {
     if (!item || !isAndroid) return;
 
     item.style.display = "flex";
-    const granted = window.MoriMainBridge?.hasAllFilesPermission
-      ? window.MoriMainBridge.hasAllFilesPermission()
+    const granted = window.ShiroMainBridge?.hasAllFilesPermission
+      ? window.ShiroMainBridge.hasAllFilesPermission()
       : false;
 
     const lang = translations[currentLang] || translations.en;
@@ -230,33 +230,33 @@ export function initStorageSettings() {
       chip.textContent = granted
         ? (lang["status-granted"] || "Granted")
         : (lang["status-not-granted"] || "Not Granted");
-      chip.className = "mori-status-chip " + (granted ? "granted" : "warning");
+      chip.className = "shiro-status-chip " + (granted ? "granted" : "warning");
     }
 
-    // If permission is revoked / not granted, immediately fallback any outside path to Download/Mori
+    // If permission is revoked / not granted, immediately fallback any outside path to Download/Shiro
     if (!granted) {
       let changed = false;
-      const currentVideo = (localStorage.getItem("mori_download_path") || customPath || "").trim();
+      const currentVideo = (localStorage.getItem("shiro_download_path") || customPath || "").trim();
       if (
         currentVideo &&
         !currentVideo.toLowerCase().startsWith("download") &&
-        currentVideo !== "Mori"
+        currentVideo !== "Shiro"
       ) {
-        customPath = "Download/Mori";
-        localStorage.setItem("mori_download_path", "Download/Mori");
-        if (pathVal) pathVal.textContent = formatPathDisplay("Download/Mori");
+        customPath = "Download/Shiro";
+        localStorage.setItem("shiro_download_path", "Download/Shiro");
+        if (pathVal) pathVal.textContent = formatPathDisplay("Download/Shiro");
         changed = true;
       }
 
-      const currentMusic = (localStorage.getItem("mori_music_path") || customMusicPath || "").trim();
+      const currentMusic = (localStorage.getItem("shiro_music_path") || customMusicPath || "").trim();
       if (
         currentMusic &&
         !currentMusic.toLowerCase().startsWith("download") &&
-        currentMusic !== "Mori/Music"
+        currentMusic !== "Shiro/Music"
       ) {
-        customMusicPath = "Download/Mori/Music";
-        localStorage.setItem("mori_music_path", "Download/Mori/Music");
-        if (musicPathVal) musicPathVal.textContent = formatPathDisplay("Download/Mori/Music");
+        customMusicPath = "Download/Shiro/Music";
+        localStorage.setItem("shiro_music_path", "Download/Shiro/Music");
+        if (musicPathVal) musicPathVal.textContent = formatPathDisplay("Download/Shiro/Music");
         changed = true;
       }
 
@@ -267,41 +267,41 @@ export function initStorageSettings() {
   };
   updateAllFilesUI();
   document.getElementById("allFilesAccessItem")?.addEventListener("click", () => {
-    if (window.MoriMainBridge?.requestAllFilesPermission) {
-      window.MoriMainBridge.requestAllFilesPermission();
+    if (window.ShiroMainBridge?.requestAllFilesPermission) {
+      window.ShiroMainBridge.requestAllFilesPermission();
     }
   });
-  window.addEventListener("mori_app_resumed", updateAllFilesUI);
+  window.addEventListener("shiro_app_resumed", updateAllFilesUI);
 
   // 2. Listen for saved files to update stats live
-  window.addEventListener("mori_file_saved", () => {
-    const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  window.addEventListener("shiro_file_saved", () => {
+    const history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
     const storedCount = parseInt(
-      localStorage.getItem("mori_dl_count") || "0",
+      localStorage.getItem("shiro_dl_count") || "0",
       10,
     );
     const newCount = Math.max(storedCount, history.length) + 1;
-    localStorage.setItem("mori_dl_count", newCount);
+    localStorage.setItem("shiro_dl_count", newCount);
     updateDlStatsDisplay();
   });
 
   // Helper for preset chips
   const getVideoPresets = () => {
     if (isAndroid) {
-      return ["Download/Mori", "Movies/Mori", "DCIM/Mori", "Download"];
+      return ["Download/Shiro", "Movies/Shiro", "DCIM/Shiro", "Download"];
     } else if (isDesktop) {
-      return ["Movies/Mori", "Downloads/Mori", "Desktop/Mori"];
+      return ["Movies/Shiro", "Downloads/Shiro", "Desktop/Shiro"];
     }
-    return ["Mori", "Videos"];
+    return ["Shiro", "Videos"];
   };
 
   const getMusicPresets = () => {
     if (isAndroid) {
-      return ["Download/Mori/Music", "Music/Mori", "Download/Mori"];
+      return ["Download/Shiro/Music", "Music/Shiro", "Download/Shiro"];
     } else if (isDesktop) {
-      return ["Music/Mori", "Downloads/Mori"];
+      return ["Music/Shiro", "Downloads/Shiro"];
     }
-    return ["Music", "Mori/Music"];
+    return ["Music", "Shiro/Music"];
   };
 
   // 3. Video Download Path Picker
@@ -309,8 +309,8 @@ export function initStorageSettings() {
     const lang = translations[currentLang] || translations.en;
     const presets = getVideoPresets();
     const canBrowse = isDesktop || isAndroid;
-    const hasPerm = isAndroid && window.MoriMainBridge?.hasAllFilesPermission
-      ? window.MoriMainBridge.hasAllFilesPermission()
+    const hasPerm = isAndroid && window.ShiroMainBridge?.hasAllFilesPermission
+      ? window.ShiroMainBridge.hasAllFilesPermission()
       : true;
 
     const permBannerHtml = !hasPerm
@@ -333,9 +333,9 @@ export function initStorageSettings() {
          ${permBannerHtml}
          <div class="path-input-wrapper">
            <span class="path-label-sm">${lang["label-custom-directory"] || "Target Directory"}</span>
-           <div class="mori-input-with-icon">
+           <div class="shiro-input-with-icon">
              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-             <input type="text" id="customPathInput" class="mori-input-noborder" value="${customPath}" placeholder="e.g. Movies/Mori" spellcheck="false" autocomplete="off">
+             <input type="text" id="customPathInput" class="shiro-input-noborder" value="${customPath}" placeholder="e.g. Movies/Shiro" spellcheck="false" autocomplete="off">
            </div>
          </div>
          <span class="path-label-sm">${lang["label-path-presets"] || "Presets"}</span>
@@ -352,18 +352,18 @@ export function initStorageSettings() {
         const input = document.getElementById("customPathInput");
         if (input && input.value.trim()) {
           const newPath = normalizePathInput(input.value);
-          const hasPerm = isAndroid && window.MoriMainBridge?.hasAllFilesPermission
-            ? window.MoriMainBridge.hasAllFilesPermission()
+          const hasPerm = isAndroid && window.ShiroMainBridge?.hasAllFilesPermission
+            ? window.ShiroMainBridge.hasAllFilesPermission()
             : true;
 
           if (isAndroid && !hasPerm && !newPath.toLowerCase().startsWith("download")) {
-            showToast(lang["desc-all-files-access"] || "All Files Access required. Reverted to Download/Mori.");
-            customPath = "Download/Mori";
-            localStorage.setItem("mori_download_path", "Download/Mori");
-            if (pathVal) pathVal.textContent = formatPathDisplay("Download/Mori");
+            showToast(lang["desc-all-files-access"] || "All Files Access required. Reverted to Download/Shiro.");
+            customPath = "Download/Shiro";
+            localStorage.setItem("shiro_download_path", "Download/Shiro");
+            if (pathVal) pathVal.textContent = formatPathDisplay("Download/Shiro");
           } else {
             customPath = newPath;
-            localStorage.setItem("mori_download_path", newPath);
+            localStorage.setItem("shiro_download_path", newPath);
             if (pathVal) pathVal.textContent = formatPathDisplay(newPath);
             showToast(lang["toast-path-updated"] || "Path updated");
           }
@@ -410,14 +410,14 @@ export function initStorageSettings() {
       });
 
       document.getElementById("pathPermBanner")?.addEventListener("click", () => {
-        if (window.MoriMainBridge?.requestAllFilesPermission) {
-          window.MoriMainBridge.requestAllFilesPermission();
+        if (window.ShiroMainBridge?.requestAllFilesPermission) {
+          window.ShiroMainBridge.requestAllFilesPermission();
         }
       });
 
       document.getElementById("resetPathBtn")?.addEventListener("click", () => {
         if (input) {
-          input.value = isAndroid ? "Download/Mori" : "Movies/Mori";
+          input.value = isAndroid ? "Download/Shiro" : "Movies/Shiro";
           updateActiveChips();
           input.focus();
         }
@@ -434,8 +434,8 @@ export function initStorageSettings() {
     const lang = translations[currentLang] || translations.en;
     const presets = getMusicPresets();
     const canBrowse = isDesktop || isAndroid;
-    const hasPerm = isAndroid && window.MoriMainBridge?.hasAllFilesPermission
-      ? window.MoriMainBridge.hasAllFilesPermission()
+    const hasPerm = isAndroid && window.ShiroMainBridge?.hasAllFilesPermission
+      ? window.ShiroMainBridge.hasAllFilesPermission()
       : true;
 
     const permBannerHtml = !hasPerm
@@ -458,9 +458,9 @@ export function initStorageSettings() {
          ${permBannerHtml}
          <div class="path-input-wrapper">
            <span class="path-label-sm">${lang["label-custom-directory"] || "Target Directory"}</span>
-           <div class="mori-input-with-icon">
+           <div class="shiro-input-with-icon">
              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-             <input type="text" id="customMusicPathInput" class="mori-input-noborder" value="${customMusicPath}" placeholder="e.g. Music/Mori" spellcheck="false" autocomplete="off">
+             <input type="text" id="customMusicPathInput" class="shiro-input-noborder" value="${customMusicPath}" placeholder="e.g. Music/Shiro" spellcheck="false" autocomplete="off">
            </div>
          </div>
          <span class="path-label-sm">${lang["label-path-presets"] || "Presets"}</span>
@@ -477,18 +477,18 @@ export function initStorageSettings() {
         const input = document.getElementById("customMusicPathInput");
         if (input && input.value.trim()) {
           const newPath = normalizePathInput(input.value);
-          const hasPerm = isAndroid && window.MoriMainBridge?.hasAllFilesPermission
-            ? window.MoriMainBridge.hasAllFilesPermission()
+          const hasPerm = isAndroid && window.ShiroMainBridge?.hasAllFilesPermission
+            ? window.ShiroMainBridge.hasAllFilesPermission()
             : true;
 
           if (isAndroid && !hasPerm && !newPath.toLowerCase().startsWith("download")) {
-            showToast(lang["desc-all-files-access"] || "All Files Access required. Reverted to Download/Mori.");
-            customMusicPath = "Download/Mori/Music";
-            localStorage.setItem("mori_music_path", "Download/Mori/Music");
-            if (musicPathVal) musicPathVal.textContent = formatPathDisplay("Download/Mori/Music");
+            showToast(lang["desc-all-files-access"] || "All Files Access required. Reverted to Download/Shiro.");
+            customMusicPath = "Download/Shiro/Music";
+            localStorage.setItem("shiro_music_path", "Download/Shiro/Music");
+            if (musicPathVal) musicPathVal.textContent = formatPathDisplay("Download/Shiro/Music");
           } else {
             customMusicPath = newPath;
-            localStorage.setItem("mori_music_path", newPath);
+            localStorage.setItem("shiro_music_path", newPath);
             if (musicPathVal) musicPathVal.textContent = formatPathDisplay(newPath);
             showToast(lang["toast-path-updated"] || "Path updated");
           }
@@ -535,14 +535,14 @@ export function initStorageSettings() {
       });
 
       document.getElementById("musicPathPermBanner")?.addEventListener("click", () => {
-        if (window.MoriMainBridge?.requestAllFilesPermission) {
-          window.MoriMainBridge.requestAllFilesPermission();
+        if (window.ShiroMainBridge?.requestAllFilesPermission) {
+          window.ShiroMainBridge.requestAllFilesPermission();
         }
       });
 
       document.getElementById("resetMusicPathBtn")?.addEventListener("click", () => {
         if (input) {
-          input.value = "Music/Mori";
+          input.value = "Music/Shiro";
           updateActiveChips();
           input.focus();
         }
@@ -555,11 +555,11 @@ export function initStorageSettings() {
   });
 
   // 5. Auto Clear Cache Toggle & Auto Trigger
-  const isAutoClear = localStorage.getItem("mori_auto_clear_cache") === "true";
+  const isAutoClear = localStorage.getItem("shiro_auto_clear_cache") === "true";
   if (autoClearToggle) {
     autoClearToggle.checked = isAutoClear;
     autoClearToggle.addEventListener("change", (e) => {
-      localStorage.setItem("mori_auto_clear_cache", e.target.checked);
+      localStorage.setItem("shiro_auto_clear_cache", e.target.checked);
       const lang = translations[currentLang] || translations.en;
       showToast(
         e.target.checked
@@ -625,17 +625,17 @@ export function initStorageSettings() {
       lang["desc-wipedata"] || "This will reset all data and history. Proceed?",
       async () => {
         try {
-          const langPref = localStorage.getItem("mori_lang");
-          const theme = localStorage.getItem("mori_theme");
-          const vPath = localStorage.getItem("mori_download_path");
-          const mPath = localStorage.getItem("mori_music_path");
+          const langPref = localStorage.getItem("shiro_lang");
+          const theme = localStorage.getItem("shiro_theme");
+          const vPath = localStorage.getItem("shiro_download_path");
+          const mPath = localStorage.getItem("shiro_music_path");
 
           localStorage.clear();
 
-          if (langPref) localStorage.setItem("mori_lang", langPref);
-          if (theme) localStorage.setItem("mori_theme", theme);
-          if (vPath) localStorage.setItem("mori_download_path", vPath);
-          if (mPath) localStorage.setItem("mori_music_path", mPath);
+          if (langPref) localStorage.setItem("shiro_lang", langPref);
+          if (theme) localStorage.setItem("shiro_theme", theme);
+          if (vPath) localStorage.setItem("shiro_download_path", vPath);
+          if (mPath) localStorage.setItem("shiro_music_path", mPath);
 
           if (Filesystem) {
             try {

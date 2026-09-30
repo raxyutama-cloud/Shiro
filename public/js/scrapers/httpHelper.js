@@ -6,7 +6,7 @@ import { CapacitorHttp, getUserAgent } from "../utils/index.js";
  * @returns {number} Timeout in milliseconds
  */
 export function getRequestTimeout() {
-  const customSec = parseInt(localStorage.getItem("mori_request_timeout"), 10);
+  const customSec = parseInt(localStorage.getItem("shiro_request_timeout"), 10);
   if (!isNaN(customSec) && customSec >= 5 && customSec <= 180) {
     return customSec * 1000;
   }
@@ -55,9 +55,9 @@ export async function scraperFetch(options, serverName = "Server") {
   }
 
   const isHeaderSpoofing =
-    localStorage.getItem("mori_header_spoofing") !== "false";
-  const isBypassSsl = localStorage.getItem("mori_bypass_ssl") === "true";
-  const isForceIpv4 = localStorage.getItem("mori_force_ipv4") === "true";
+    localStorage.getItem("shiro_header_spoofing") !== "false";
+  const isBypassSsl = localStorage.getItem("shiro_bypass_ssl") === "true";
+  const isForceIpv4 = localStorage.getItem("shiro_force_ipv4") === "true";
 
   if (isHeaderSpoofing) {
     try {
@@ -81,7 +81,7 @@ export async function scraperFetch(options, serverName = "Server") {
     }
   }
 
-  const dohMode = localStorage.getItem("mori_doh") || "off";
+  const dohMode = localStorage.getItem("shiro_doh") || "off";
 
   if (dohMode !== "off") {
     try {
@@ -128,7 +128,7 @@ export async function scraperFetch(options, serverName = "Server") {
     window.__TAURI_INTERNALS__?.invoke ||
     window.__TAURI__?.invoke;
 
-  const nativeBridge = window.MoriMainBridge || window.MoriShareBridge;
+  const nativeBridge = window.ShiroMainBridge || window.ShiroShareBridge;
   const capHttp = window.Capacitor?.Plugins?.CapacitorHttp || CapacitorHttp;
 
   if (nativeBridge?.httpRequestAsync) {
@@ -152,12 +152,12 @@ export async function scraperFetch(options, serverName = "Server") {
     const reqId =
       "req_" + Math.random().toString(36).substring(2, 11) + "_" + Date.now();
     const raw = await new Promise((resolve, reject) => {
-      if (!window.__moriNativeCallbacks) window.__moriNativeCallbacks = {};
+      if (!window.__shiroNativeCallbacks) window.__shiroNativeCallbacks = {};
       const timeoutMs = getRequestTimeout();
       const timer = setTimeout(() => {
-        delete window.__moriNativeCallbacks[reqId];
-        if (window.__moriShareCallbacks)
-          delete window.__moriShareCallbacks[reqId];
+        delete window.__shiroNativeCallbacks[reqId];
+        if (window.__shiroShareCallbacks)
+          delete window.__shiroShareCallbacks[reqId];
         reject(
           new Error(
             `${serverName} request timed out after ${timeoutMs / 1000}s`,
@@ -165,12 +165,12 @@ export async function scraperFetch(options, serverName = "Server") {
         );
       }, timeoutMs + 2000);
 
-      window.__moriNativeCallbacks[reqId] = (val) => {
+      window.__shiroNativeCallbacks[reqId] = (val) => {
         clearTimeout(timer);
         resolve(val);
       };
-      if (!window.__moriShareCallbacks)
-        window.__moriShareCallbacks = window.__moriNativeCallbacks;
+      if (!window.__shiroShareCallbacks)
+        window.__shiroShareCallbacks = window.__shiroNativeCallbacks;
       nativeBridge.httpRequestAsync(JSON.stringify(bridgeOpts), reqId);
     });
     const parsed = JSON.parse(raw);

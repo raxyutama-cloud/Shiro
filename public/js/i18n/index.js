@@ -30,7 +30,7 @@ export const translations = {
  */
 
 export function t(key, params = {}, lang = null) {
-  const activeLang = lang || localStorage.getItem("mori_lang") || "en";
+  const activeLang = lang || localStorage.getItem("shiro_lang") || "en";
   let text =
     translations[activeLang]?.[key] ?? translations["en"]?.[key] ?? key;
 

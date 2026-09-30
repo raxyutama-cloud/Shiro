@@ -99,9 +99,9 @@ infoOverlay?.addEventListener("click", (e) => {
 
 // Modal close handling (delegated to this module)
 export const hideModal = () => {
-  window._moriIsModalOpen = false;
+  window._shiroIsModalOpen = false;
   const fsPlayer = document.querySelector(
-    ".mori-player-container.mori-fullscreen",
+    ".shiro-player-container.shiro-fullscreen",
   );
   if (fsPlayer && typeof fsPlayer._exitFullscreen === "function") {
     fsPlayer._exitFullscreen();

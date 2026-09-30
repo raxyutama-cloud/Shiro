@@ -46,9 +46,9 @@ export async function saveToStorage({
   let successfulDir = "EXTERNAL_STORAGE";
   let attempts = 0;
 
-  const isAutoRetry = localStorage.getItem("mori_auto_retry") !== "false";
+  const isAutoRetry = localStorage.getItem("shiro_auto_retry") !== "false";
   const customMaxRetry = parseInt(
-    localStorage.getItem("mori_max_retry") || "3",
+    localStorage.getItem("shiro_max_retry") || "3",
     10,
   );
   const maxAttempts = isAutoRetry ? customMaxRetry : 1;
@@ -98,9 +98,9 @@ export async function saveToStorage({
             await new Promise((r) => setTimeout(r, 1000));
           }
           const isBypassSsl =
-            localStorage.getItem("mori_bypass_ssl") === "true";
+            localStorage.getItem("shiro_bypass_ssl") === "true";
           const isForceIpv4 =
-            localStorage.getItem("mori_force_ipv4") === "true";
+            localStorage.getItem("shiro_force_ipv4") === "true";
 
           const dlOpts = {
             url: actualDownloadUrl,

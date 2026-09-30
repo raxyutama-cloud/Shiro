@@ -160,7 +160,7 @@ fn resolve_desktop_directory(folder: Option<&str>) -> std::path::PathBuf {
                 download_dir.join(&trimmed)
             }
         }
-        _ => download_dir.join("Mori"),
+        _ => download_dir.join("Shiro"),
     }
 }
 
@@ -192,7 +192,7 @@ async fn tauri_download_file(
     std::fs::create_dir_all(&target_dir).map_err(|e| format!("Directory error: {}", e))?;
     let (stem, ext) = {
         let p = std::path::Path::new(&filename);
-        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Mori_Media");
+        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Shiro_Media");
         let e = p.extension().and_then(|s| s.to_str()).unwrap_or("mp4").to_lowercase();
         (s.to_string(), e)
     };
@@ -302,10 +302,10 @@ async fn tauri_read_file_bytes(path: String) -> Result<Vec<u8>, String> {
     let target = if rel_path.starts_with("Downloads/") || rel_path.starts_with("downloads/") {
         let parent = download_dir.parent().unwrap_or(&download_dir);
         parent.join(rel_path)
-    } else if rel_path.starts_with("Mori/") {
+    } else if rel_path.starts_with("Shiro/") {
         download_dir.join(rel_path)
     } else {
-        download_dir.join("Mori").join(rel_path)
+        download_dir.join("Shiro").join(rel_path)
     };
 
     if let Ok(bytes) = std::fs::read(&target) {
@@ -363,7 +363,7 @@ async fn tauri_save_bytes_file(
     std::fs::create_dir_all(&target_dir).map_err(|e| format!("Directory error: {}", e))?;
     let (stem, ext) = {
         let p = std::path::Path::new(&filename);
-        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Mori_Document");
+        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Shiro_Document");
         let e = p.extension().and_then(|s| s.to_str()).unwrap_or("pdf").to_lowercase();
         (s.to_string(), e)
     };

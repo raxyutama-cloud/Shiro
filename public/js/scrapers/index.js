@@ -1,5 +1,5 @@
-// Mori Scraper Engine Runtime Loader
-// GNU General Public License v3.0 — (C) 2026 coflyn.
+// Shiro Scraper Engine Runtime Loader
+// GNU General Public License v3.0 — (C) 2026 Raxy Utama.
 
 import * as utils from "../utils/index.js";
 import * as urlUtils from "../utils/urlUtils.js";
@@ -9,10 +9,10 @@ import { scraperFetch } from "./httpHelper.js";
 export * from "./httpHelper.js";
 
 export const BUNDLED_SCRAPER_VERSION = 3;
-window.__MORI_BUNDLED_SCRAPER_VERSION__ = BUNDLED_SCRAPER_VERSION;
+window.__SHIRO_BUNDLED_SCRAPER_VERSION__ = BUNDLED_SCRAPER_VERSION;
 
 // Expose deps to the bundled IIFE core
-window.__moriDeps = { utils, urlUtils, core };
+window.__shiroDeps = { utils, urlUtils, core };
 
 let _corePromise = null;
 
@@ -42,7 +42,7 @@ async function fetchBundleText() {
       if (text) return text;
     }
   }
-  throw new Error("[Mori] Could not load scrapers/bundle.js");
+  throw new Error("[Shiro] Could not load scrapers/bundle.js");
 }
 
 async function loadCoreScrapers() {
@@ -53,15 +53,15 @@ async function loadCoreScrapers() {
 
     // A. OTA patch from localStorage (plain JS text)
     try {
-      const patchedText = localStorage.getItem("mori_patched_scraper_bin");
-      const activeVer = parseInt(localStorage.getItem("mori_active_scraper_version") || "0", 10);
+      const patchedText = localStorage.getItem("shiro_patched_scraper_bin");
+      const activeVer = parseInt(localStorage.getItem("shiro_active_scraper_version") || "0", 10);
       if (patchedText && activeVer >= BUNDLED_SCRAPER_VERSION) {
         scriptText = patchedText;
         isFromOtaPatch = true;
-        console.log(`[Mori] Loaded OTA patched scraper core v${activeVer}`);
+        console.log(`[Shiro] Loaded OTA patched scraper core v${activeVer}`);
       }
     } catch (otaErr) {
-      console.warn("[Mori] OTA patch load warning:", otaErr);
+      console.warn("[Shiro] OTA patch load warning:", otaErr);
     }
 
     try {
@@ -72,25 +72,25 @@ async function loadCoreScrapers() {
 
       const fn = new Function(
         scriptText +
-          "\nreturn typeof __MoriCoreScrapers !== 'undefined' ? __MoriCoreScrapers : (typeof window !== 'undefined' ? window.__MoriCoreScrapers : null);"
+          "\nreturn typeof __ShiroCoreScrapers !== 'undefined' ? __ShiroCoreScrapers : (typeof window !== 'undefined' ? window.__ShiroCoreScrapers : null);"
       );
       const mod = fn();
 
-      if (!mod) throw new Error("[Mori] Failed to instantiate core scraper modules.");
+      if (!mod) throw new Error("[Shiro] Failed to instantiate core scraper modules.");
 
-      window.__MoriCoreScrapers = mod;
-      console.log(`[Mori] Core scrapers ready (${isFromOtaPatch ? "OTA Patch" : "Bundled"} v${BUNDLED_SCRAPER_VERSION}).`);
+      window.__ShiroCoreScrapers = mod;
+      console.log(`[Shiro] Core scrapers ready (${isFromOtaPatch ? "OTA Patch" : "Bundled"} v${BUNDLED_SCRAPER_VERSION}).`);
       return mod;
     } catch (e) {
       // Safe-mode: corrupted OTA patch → clear and retry with bundled
       if (isFromOtaPatch) {
-        console.warn("[Mori] Corrupted OTA patch — resetting to bundled core.", e);
-        localStorage.removeItem("mori_patched_scraper_bin");
-        localStorage.removeItem("mori_active_scraper_version");
+        console.warn("[Shiro] Corrupted OTA patch — resetting to bundled core.", e);
+        localStorage.removeItem("shiro_patched_scraper_bin");
+        localStorage.removeItem("shiro_active_scraper_version");
         _corePromise = null;
         return loadCoreScrapers();
       }
-      console.error("[Mori] Fatal init error:", e);
+      console.error("[Shiro] Fatal init error:", e);
       if (typeof window.showFatalErrorModal === "function") {
         window.showFatalErrorModal(e.message || String(e));
       }
@@ -148,7 +148,7 @@ export async function scrapeDouyin(url, ...rest) {
         targetUrl = resolvedUrl;
       }
     } catch (e) {
-      console.warn("[Mori] Douyin resolver warning:", e);
+      console.warn("[Shiro] Douyin resolver warning:", e);
     }
   }
 

@@ -24,7 +24,7 @@ export async function handlePostDownload({
   progressContainer,
 }) {
   triggerHaptic("success");
-  if (!window._moriPlaylistDownloading) {
+  if (!window._shiroPlaylistDownloading) {
     playCompletionSound();
     autoClearInputBox();
   }
@@ -52,7 +52,7 @@ export async function handlePostDownload({
   } catch (_) {}
 
   window.dispatchEvent(
-    new CustomEvent("mori_file_saved", {
+    new CustomEvent("shiro_file_saved", {
       detail: {
         url: sourceUrl || url,
         path: savedFile.path,
@@ -62,20 +62,20 @@ export async function handlePostDownload({
     }),
   );
 
-  if (window.MoriMainBridge?.scanMediaFile) {
+  if (window.ShiroMainBridge?.scanMediaFile) {
     try {
-      window.MoriMainBridge.scanMediaFile(savedFile.path || savedUri);
+      window.ShiroMainBridge.scanMediaFile(savedFile.path || savedUri);
     } catch (_) {}
   }
 
   const displayFolder = targetFolder.startsWith("/") ? targetFolder : `/${targetFolder}`;
 
   if (
-    !window._moriPlaylistDownloading &&
-    window.MoriMainBridge?.showCompleteNotification
+    !window._shiroPlaylistDownloading &&
+    window.ShiroMainBridge?.showCompleteNotification
   ) {
     try {
-      window.MoriMainBridge.showCompleteNotification(
+      window.ShiroMainBridge.showCompleteNotification(
         effectiveTitle,
         `${displayFolder}/${fileName}`,
       );
@@ -83,7 +83,7 @@ export async function handlePostDownload({
   }
 
   setTimeout(() => {
-    if (btn && !window._moriPlaylistDownloading) {
+    if (btn && !window._shiroPlaylistDownloading) {
       btn.disabled = false;
       const b = btn.querySelector(".dl-badge");
       if (b) {
@@ -93,7 +93,7 @@ export async function handlePostDownload({
         btn.innerHTML = originalContent;
       }
     }
-    if (!window._moriPlaylistDownloading) {
+    if (!window._shiroPlaylistDownloading) {
       progressContainer?.classList.add("hidden");
     }
   }, 2500);

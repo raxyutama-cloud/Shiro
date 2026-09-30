@@ -6,7 +6,7 @@ import { translations } from "../i18n/index.js";
 
 // Haptic Feedback Helper
 export async function triggerHaptic(type = "medium") {
-  if (localStorage.getItem("mori_haptic") !== "true") return;
+  if (localStorage.getItem("shiro_haptic") !== "true") return;
   try {
     const HapticsPlugin = window.Capacitor?.Plugins?.Haptics || Haptics;
     if (HapticsPlugin && window.Capacitor?.isNativePlatform?.()) {
@@ -94,7 +94,7 @@ export async function getNetworkStatus() {
 }
 
 export async function checkWifiOnlyGuard() {
-  const isWifiOnly = localStorage.getItem("mori_wifi_only") === "true";
+  const isWifiOnly = localStorage.getItem("shiro_wifi_only") === "true";
   if (!isWifiOnly) return true; // Allowed
 
   const status = await getNetworkStatus();
@@ -112,7 +112,7 @@ export async function checkWifiOnlyGuard() {
 let wakeLockSentinel = null;
 export async function requestWakeLock(force = false) {
   if (
-    (force || localStorage.getItem("mori_keep_awake") === "true") &&
+    (force || localStorage.getItem("shiro_keep_awake") === "true") &&
     "wakeLock" in navigator
   ) {
     try {
@@ -153,15 +153,15 @@ export async function pickNativeFolder() {
   }
 
   // 2. Android
-  if (window.MoriMainBridge?.pickFolder) {
+  if (window.ShiroMainBridge?.pickFolder) {
     return new Promise((resolve) => {
       const callbackId = "folder_" + Date.now();
-      window.__moriFolderCallback = window.__moriFolderCallback || {};
-      window.__moriFolderCallback[callbackId] = (folderPath) => {
-        delete window.__moriFolderCallback[callbackId];
+      window.__shiroFolderCallback = window.__shiroFolderCallback || {};
+      window.__shiroFolderCallback[callbackId] = (folderPath) => {
+        delete window.__shiroFolderCallback[callbackId];
         resolve(folderPath || null);
       };
-      window.MoriMainBridge.pickFolder(callbackId);
+      window.ShiroMainBridge.pickFolder(callbackId);
     });
   }
 
@@ -188,9 +188,9 @@ export async function openNativeFolder(targetPath) {
   }
 
   // 2. Android
-  if (window.MoriMainBridge?.openFolder) {
+  if (window.ShiroMainBridge?.openFolder) {
     try {
-      const res = window.MoriMainBridge.openFolder(targetPath);
+      const res = window.ShiroMainBridge.openFolder(targetPath);
       if (res) return true;
     } catch (_) {}
   }

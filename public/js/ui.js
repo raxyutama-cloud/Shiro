@@ -34,7 +34,7 @@ export function renderHistory(onItemClick, onDeleteClick) {
   if (typeof window.checkAndMergePendingHistorySync === "function") {
     window.checkAndMergePendingHistorySync();
   }
-  const rawHistory = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  const rawHistory = JSON.parse(localStorage.getItem("shiro_history") || "[]");
   // Sort favorites to the top (most recently favorited first), then non-favorites
   const history = [...rawHistory].sort((a, b) => {
     if (a.favorite && !b.favorite) return -1;
@@ -52,13 +52,13 @@ export function renderHistory(onItemClick, onDeleteClick) {
   const editHistoryBtn = document.getElementById("editHistoryBtn");
   const historyActions = document.getElementById("historyActions");
   if (!historyPage) return;
-  const activeUrl = window._moriActiveDownloadUrl || null;
+  const activeUrl = window._shiroActiveDownloadUrl || null;
 
   const dlStatsEl = document.getElementById("historyDlStatsVal");
   const historyStatsEl = document.getElementById("historyItemsCountVal");
   if (dlStatsEl) {
     const storedCount = parseInt(
-      localStorage.getItem("mori_dl_count") || "0",
+      localStorage.getItem("shiro_dl_count") || "0",
       10,
     );
     const count = Math.max(storedCount, history.length);
@@ -105,7 +105,7 @@ export function renderHistory(onItemClick, onDeleteClick) {
         (item.url && activeUrl && item.url.includes(activeUrl)));
 
     const defaultPlaceholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'%3E%3Cpath d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3C/svg%3E";
-    const isDataSaver = localStorage.getItem("mori_data_saver") === "true";
+    const isDataSaver = localStorage.getItem("shiro_data_saver") === "true";
     let thumbSrc = isDataSaver ? defaultPlaceholder : null;
 
     if (!isDataSaver) {
@@ -208,8 +208,8 @@ export function renderHistory(onItemClick, onDeleteClick) {
       favBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         e.preventDefault();
-        if (typeof window.toggleMoriFavorite === "function") {
-          window.toggleMoriFavorite(item.url);
+        if (typeof window.toggleShiroFavorite === "function") {
+          window.toggleShiroFavorite(item.url);
         }
       });
     }

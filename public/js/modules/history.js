@@ -24,11 +24,11 @@ import {
 export function safeSetHistory(history) {
   if (!Array.isArray(history)) return false;
   try {
-    localStorage.setItem("mori_history", JSON.stringify(history));
+    localStorage.setItem("shiro_history", JSON.stringify(history));
     return true;
   } catch (quotaErr) {
     console.warn(
-      "[Mori History] LocalStorage quota exceeded, initiating progressive cleanup...",
+      "[Shiro History] LocalStorage quota exceeded, initiating progressive cleanup...",
       quotaErr,
     );
 
@@ -62,11 +62,11 @@ export function safeSetHistory(history) {
         }
         return copy;
       });
-      localStorage.setItem("mori_history", JSON.stringify(pruned));
+      localStorage.setItem("shiro_history", JSON.stringify(pruned));
       return true;
     } catch (e2) {
       console.warn(
-        "[Mori History] Tier 2 cleanup: stripping all data URLs and compacting...",
+        "[Shiro History] Tier 2 cleanup: stripping all data URLs and compacting...",
         e2,
       );
       try {
@@ -104,11 +104,11 @@ export function safeSetHistory(history) {
           ...favs,
           ...nonFavs.slice(0, Math.max(10, 50 - favs.length)),
         ];
-        localStorage.setItem("mori_history", JSON.stringify(consolidated));
+        localStorage.setItem("shiro_history", JSON.stringify(consolidated));
         return true;
       } catch (e3) {
         console.error(
-          "[Mori History] Tier 3 cleanup: preserving favorites only...",
+          "[Shiro History] Tier 3 cleanup: preserving favorites only...",
           e3,
         );
         try {
@@ -129,7 +129,7 @@ export function safeSetHistory(history) {
               })),
             }));
           localStorage.setItem(
-            "mori_history",
+            "shiro_history",
             JSON.stringify(favsOnly.slice(0, 30)),
           );
           return true;
@@ -140,7 +140,7 @@ export function safeSetHistory(history) {
     }
   }
 }
-window.safeSetMoriHistory = safeSetHistory;
+window.safeSetShiroHistory = safeSetHistory;
 
 // History Edit Handlers
 editHistoryBtn?.addEventListener("click", () => {
@@ -162,7 +162,7 @@ clearAllBtn?.addEventListener("click", () => {
       "Are you sure you want to delete all download history?",
     async () => {
       // Clean up physical thumbnail files
-      const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+      const history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
       const thumbs = [];
       for (const item of history) {
         thumbs.push(item.thumbnail, item.localThumbnail);
@@ -176,7 +176,7 @@ clearAllBtn?.addEventListener("click", () => {
         }
       }
 
-      localStorage.removeItem("mori_history");
+      localStorage.removeItem("shiro_history");
       setIsEditingHistory(false);
       setUIState({ isEditingHistory: false });
       renderHistory(onHistoryItemClick, onHistoryDeleteClick);
@@ -199,7 +199,7 @@ export async function onHistoryDeleteClick(url) {
     translations[currentLang]["msg-delete-item-confirm"] ||
       "Remove this item from history?",
     async () => {
-      let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+      let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
       const index = history.findIndex((h) => h.url === url);
       if (index === -1) return;
       const itemToDelete = history[index];
@@ -232,7 +232,7 @@ export async function onHistoryDeleteClick(url) {
 
 export function toggleFavorite(url) {
   if (!url) return false;
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
   const target = cleanUrl(url);
   const index = history.findIndex(
     (h) =>
@@ -266,21 +266,21 @@ export function toggleFavorite(url) {
   triggerHaptic?.();
 
   window.dispatchEvent(
-    new CustomEvent("mori_favorite_toggled", {
+    new CustomEvent("shiro_favorite_toggled", {
       detail: { url: item.url, favorite: isNowFav, item },
     }),
   );
 
   return isNowFav;
 }
-window.toggleMoriFavorite = toggleFavorite;
+window.toggleShiroFavorite = toggleFavorite;
 
 // Global Event for File Saved (Syncing UI and History)
-window.addEventListener("mori_file_saved", async (e) => {
-  if (localStorage.getItem("mori_incognito") === "true") return;
+window.addEventListener("shiro_file_saved", async (e) => {
+  if (localStorage.getItem("shiro_incognito") === "true") return;
   const { url, path, uri } = e.detail;
   const target = cleanUrl(url);
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
 
   const isVideo = path.toLowerCase().endsWith(".mp4");
   const isAudio = path.toLowerCase().endsWith(".mp3");
@@ -318,7 +318,7 @@ window.addEventListener("mori_file_saved", async (e) => {
     return item;
   });
 
-  const limitVal = localStorage.getItem("mori_history_limit") || "unlimited";
+  const limitVal = localStorage.getItem("shiro_history_limit") || "unlimited";
   if (limitVal !== "unlimited") {
     const maxItems = parseInt(limitVal, 10);
     if (!isNaN(maxItems) && history.length > maxItems) {
@@ -333,16 +333,16 @@ window.addEventListener("mori_file_saved", async (e) => {
     try {
       let localThumbnail = null;
       // 1. Android Native Bridge
-      if (window.MoriMainBridge?.getVideoThumbnail) {
+      if (window.ShiroMainBridge?.getVideoThumbnail) {
         try {
-          localThumbnail = window.MoriMainBridge.getVideoThumbnail(
+          localThumbnail = window.ShiroMainBridge.getVideoThumbnail(
             path || fileUri,
           );
         } catch (_) {}
       }
 
-      // 2. iOS Capacitor Native Bridge (AVAssetImageGenerator via MoriSecurity)
-      const secPlugin = window.Capacitor?.Plugins?.MoriSecurity || window.MoriSecurity;
+      // 2. iOS Capacitor Native Bridge (AVAssetImageGenerator via ShiroSecurity)
+      const secPlugin = window.Capacitor?.Plugins?.ShiroSecurity || window.ShiroSecurity;
       if (!localThumbnail && secPlugin?.getVideoThumbnail) {
         try {
           const res = await secPlugin.getVideoThumbnail({
@@ -364,7 +364,7 @@ window.addEventListener("mori_file_saved", async (e) => {
       const isValidThumb = (t) => typeof t === "string" && t.length > 0 && !t.startsWith("thumb_");
 
       if (!localThumbnail || !isValidThumb(localThumbnail)) {
-        history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+        history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
         const found = history.find((h) => cleanUrl(h.url) === target);
         if (found?.thumbnail && isValidThumb(found.thumbnail)) {
           localThumbnail = found.thumbnail;
@@ -372,7 +372,7 @@ window.addEventListener("mori_file_saved", async (e) => {
       }
 
       if (localThumbnail && isValidThumb(localThumbnail)) {
-        history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+        history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
         history = history.map((item) => {
           if (cleanUrl(item.url) === target) {
             const localFiles = item.localFiles || [];
@@ -387,7 +387,7 @@ window.addEventListener("mori_file_saved", async (e) => {
               thumbnail: keepOriginalThumb,
               thumbVersion: 3,
               versionCode: 19,
-              versionName: "4.3.3",
+              versionName: "4.4.0",
               thumbRepaired: true,
             };
           }
@@ -407,8 +407,8 @@ window.addEventListener("mori_file_saved", async (e) => {
 
 // History Storage Helper
 export function saveToHistory(result, url) {
-  if (localStorage.getItem("mori_incognito") === "true") return;
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  if (localStorage.getItem("shiro_incognito") === "true") return;
+  let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
 
   let cleanTitle = (result.title || "Content")
     .replace(/#[^\s#]+/g, "")
@@ -461,7 +461,7 @@ export function saveToHistory(result, url) {
   }
 
   // Apply user-configured history limit
-  const limitVal = localStorage.getItem("mori_history_limit") || "unlimited";
+  const limitVal = localStorage.getItem("shiro_history_limit") || "unlimited";
   if (limitVal !== "unlimited") {
     let maxItems = 100;
     const parsed = parseInt(limitVal, 10);
@@ -482,13 +482,13 @@ export function saveToHistory(result, url) {
 
 // Auto-Clear Old History (Items > 30 days, protecting favorites)
 export async function autoClearOldHistory() {
-  const daysVal = localStorage.getItem("mori_auto_clear_days") || "off";
+  const daysVal = localStorage.getItem("shiro_auto_clear_days") || "off";
   if (daysVal === "off") return;
 
   const days = parseInt(daysVal, 10);
   if (isNaN(days) || days <= 0) return;
 
-  let history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+  let history = JSON.parse(localStorage.getItem("shiro_history") || "[]");
   const cutoffTime = days * 24 * 60 * 60 * 1000;
   const now = Date.now();
 
@@ -529,14 +529,14 @@ export async function autoClearOldHistory() {
 
 export function autoClearOldCache() {
   const cacheDaysVal =
-    localStorage.getItem("mori_auto_clear_cache_days") || "off";
+    localStorage.getItem("shiro_auto_clear_cache_days") || "off";
   if (cacheDaysVal === "off") return;
 
   const days = parseInt(cacheDaysVal, 10);
   if (isNaN(days) || days <= 0) return;
 
   const lastCleanup = parseInt(
-    localStorage.getItem("mori_last_cache_cleanup_ts") || "0",
+    localStorage.getItem("shiro_last_cache_cleanup_ts") || "0",
     10,
   );
   const cutoffTime = days * 24 * 60 * 60 * 1000;
@@ -547,18 +547,18 @@ export function autoClearOldCache() {
       `[CLEANUP] Executing auto clear cache (retention: ${days} days)`,
     );
     clearCacheSilently();
-    localStorage.setItem("mori_last_cache_cleanup_ts", String(now));
+    localStorage.setItem("shiro_last_cache_cleanup_ts", String(now));
   }
 }
 
 let isRefreshingThumbnails = false;
 export function refreshAllVideoThumbnails() {
-  if (!window.MoriMainBridge?.getVideoThumbnail || isRefreshingThumbnails)
+  if (!window.ShiroMainBridge?.getVideoThumbnail || isRefreshingThumbnails)
     return;
   try {
     const modalOverlay = document.getElementById("modalOverlay");
     if (
-      window._moriIsModalOpen ||
+      window._shiroIsModalOpen ||
       (modalOverlay &&
         !modalOverlay.classList.contains("hidden") &&
         modalOverlay.style.display !== "none")
@@ -567,7 +567,7 @@ export function refreshAllVideoThumbnails() {
       return;
     }
 
-    const raw = localStorage.getItem("mori_history");
+    const raw = localStorage.getItem("shiro_history");
     if (!raw) return;
     let history = JSON.parse(raw);
 
@@ -587,7 +587,7 @@ export function refreshAllVideoThumbnails() {
     const processNext = async (idxListIndex) => {
       const currentModal = document.getElementById("modalOverlay");
       if (
-        window._moriIsModalOpen ||
+        window._shiroIsModalOpen ||
         (currentModal &&
           !currentModal.classList.contains("hidden") &&
           currentModal.style.display !== "none")
@@ -603,7 +603,7 @@ export function refreshAllVideoThumbnails() {
 
       const itemIdx = pendingIndices[idxListIndex];
       const currentHistory = JSON.parse(
-        localStorage.getItem("mori_history") || "[]",
+        localStorage.getItem("shiro_history") || "[]",
       );
       if (!currentHistory[itemIdx]) {
         setTimeout(() => processNext(idxListIndex + 1), 300);
@@ -631,10 +631,10 @@ export function refreshAllVideoThumbnails() {
       if (videoPath) {
         try {
           let freshThumb = null;
-          if (window.MoriMainBridge?.getVideoThumbnail) {
-            freshThumb = window.MoriMainBridge.getVideoThumbnail(videoPath);
+          if (window.ShiroMainBridge?.getVideoThumbnail) {
+            freshThumb = window.ShiroMainBridge.getVideoThumbnail(videoPath);
           } else {
-            const secPlugin = window.Capacitor?.Plugins?.MoriSecurity || window.MoriSecurity;
+            const secPlugin = window.Capacitor?.Plugins?.ShiroSecurity || window.ShiroSecurity;
             if (secPlugin?.getVideoThumbnail) {
               const res = await secPlugin.getVideoThumbnail({ path: videoPath }).catch(() => null);
               if (res?.thumbnail) freshThumb = res.thumbnail;
