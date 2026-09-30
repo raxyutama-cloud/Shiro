@@ -64,7 +64,19 @@ jobs:
           path: dist-assets/*.ipa
 
       - name: Upload Release Asset (iOS)
+        id: upload_release_ios
         if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          files: dist-assets/*.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Retry Upload Release Asset (iOS)
+        if: >-
+          (github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')) &&
+          steps.upload_release_ios.outcome == 'failure'
         uses: softprops/action-gh-release@v2
         with:
           files: dist-assets/*.ipa

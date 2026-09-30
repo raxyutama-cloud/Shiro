@@ -81,7 +81,19 @@ jobs:
           path: dist-assets/*.apk
 
       - name: Upload Release Asset (Android)
+        id: upload_release_android
         if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          files: dist-assets/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Retry Upload Release Asset (Android)
+        if: >-
+          (github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')) &&
+          steps.upload_release_android.outcome == 'failure'
         uses: softprops/action-gh-release@v2
         with:
           files: dist-assets/*.apk

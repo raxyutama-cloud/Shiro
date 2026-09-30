@@ -43,6 +43,7 @@ jobs:
         run: npm ci || npm install
 
       - name: Inject QRIS donation config (from secrets)
+        shell: bash
         env:
           BQ_ACCOUNT_ID: ${{ secrets.BQ_ACCOUNT_ID }}
           BQ_SECRET_TOKEN: ${{ secrets.BQ_SECRET_TOKEN }}
@@ -88,6 +89,19 @@ jobs:
           find src-tauri/target/release/bundle/msi -name "*.msi" -exec cp {} "dist-assets/Shiro-v${VERSION}-Windows-x64.msi" \;
 
       - name: Upload Release Assets
+        id: upload_release_desktop
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          files: dist-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Retry Upload Release Assets
+        if: >-
+          (github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')) &&
+          steps.upload_release_desktop.outcome == 'failure'
         uses: softprops/action-gh-release@v2
         with:
           files: dist-assets/*
