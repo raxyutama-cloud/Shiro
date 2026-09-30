@@ -273,7 +273,8 @@ App (Android / iOS / Desktop / Web)
 
 - `public/js/config/qris-config.js` contains only the proxy URL. It is committed, and CI injects no secrets (the old `BQ_ACCOUNT_ID` / `BQ_SECRET_TOKEN` Actions secrets are no longer used).
 - The proxy rate-limits per IP (15 creations / 10 minutes, 300 status checks / 10 minutes), validates the amount (Rp1.000 – Rp10.000.000), sanitises the note, and whitelists the fields it returns — so the token cannot be abused by third parties.
-- Running your own fork: deploy `qris-proxy`, put your credentials in its `.env`, and point `qris-config.js` at it. You never have to embed a secret anywhere.
+- **Webhook + status cache**: every QR is created with `callback_url` so buatqris.site pushes payment events to `/qris/webhook` (HMAC-SHA256 signature verified, timing-safe). `/qris/status` answers from that cache and contacts the upstream at most once per 20s per transaction, because buatqris.site rate-limits status checks (~1 per 15–20 seconds). The app may keep polling every 5 seconds without ever tripping that limit.
+- Running your own fork: deploy `server/qris-proxy`, put your credentials in its `.env`, and point `qris-config.js` at it. You never have to embed a secret anywhere.
 
 Without a config the app simply falls back to the static QRIS image.
 

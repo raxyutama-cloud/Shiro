@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Webhook + status cache**: `/qris/create` registers a `callback_url`, and `/qris/webhook` accepts buatqris.site payment events after verifying `X-BuatQris-Signature` (HMAC-SHA256 over the raw body, timing-safe comparison; `X-BuatQris-Delivery` variants also accepted). `/qris/status` answers from that cache and calls the upstream at most once every 20s per transaction — buatqris.site rate-limits status checks to roughly one per 15–20 seconds, which otherwise produced intermittent 502s under 5-second app polling.
 - **Proxy hardening**: per-IP rate limits (15 QR creations and 300 status checks per 10 minutes), amount validation (Rp1.000 – Rp10.000.000), transaction-id format validation, note sanitising, a 20s upstream timeout and a response whitelist so only the fields the app needs are ever sent out.
 - **Operations**: `qris-proxy.service` (systemd, runs as `www-data`, auto-restart) behind an nginx `location ^~ /qris/` block on `www.api-shiro.my.id`, with CORS enabled for WebView, Tauri and web builds.
 

@@ -49,3 +49,8 @@ src-scrapers/
 scripts/
 android/app/src/main/cpp/
 src-tauri/cpp/
+
+# environment files hold the QRIS token — server-side only, never committed
+.env
+**/.env
+qris-proxy/.env
