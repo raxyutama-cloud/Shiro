@@ -9,7 +9,7 @@
 	<key>method</key>
 	<string>ad-hoc</string>
 	<key>signingStyle</key>
-	<integer>manual</integer>
+	<string>manual</string>
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>thinning</key>
