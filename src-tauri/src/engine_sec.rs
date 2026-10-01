@@ -1,15 +1,22 @@
 // Protected under GNU General Public License v3.0.
 // All rights reserved (C) 2026 Raxy Utama.
 
-extern "C" {
-    fn mori_get_engine_key(
-        challenge: *const std::ffi::c_char,
-        out_hex: *mut std::ffi::c_char,
-        max_len: i32,
-    ) -> i32;
+#[cfg(target_os = "linux")]
+pub fn get_key(challenge: &str) -> Result<String, String> {
+    // Stub for Linux - native library not available
+    Err("Shiro Engine: Native security verification not available on Linux.".into())
 }
 
+#[cfg(not(target_os = "linux"))]
 pub fn get_key(challenge: &str) -> Result<String, String> {
+    extern "C" {
+        fn mori_get_engine_key(
+            challenge: *const std::ffi::c_char,
+            out_hex: *mut std::ffi::c_char,
+            max_len: i32,
+        ) -> i32;
+    }
+    
     let mut buf = [0u8; 65];
     let c_chal = std::ffi::CString::new(challenge).map_err(|e| e.to_string())?;
     let res = unsafe {
