@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Add these to your existing AndroidManifest.xml inside <application> tag -->
+
+<!-- Game Turbo Permissions -->
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+<uses-permission android:name="android.permission.BIND_QUICK_SETTINGS_TILE" />
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+<!-- Game Turbo Services -->
+<service
+    android:name=".gameturbo.service.BoostService"
+    android:enabled="true"
+    android:exported="false"
+    android:foregroundServiceType="dataSync" />
+
+<service
+    android:name=".gameturbo.service.OverlayService"
+    android:enabled="true"
+    android:exported="false"
+    android:foregroundServiceType="dataSync" />
+
+<service
+    android:name=".gameturbo.service.GameMonitorService"
+    android:enabled="true"
+    android:exported="false"
+    android:foregroundServiceType="dataSync" />
+
+<!-- Quick Settings Tile -->
+<service
+    android:name=".gameturbo.tile.GameTurboTileService"
+    android:enabled="true"
+    android:exported="true"
+    android:icon="@drawable/ic_gameturbo_inactive"
+    android:label="@string/gameturbo_app_name"
+    android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+    <intent-filter>
+        <action android:name="android.service.quicksettings.action.QS_TILE" />
+    </intent-filter>
+</service>
+
+<!-- Broadcast Receivers -->
+<receiver
+    android:name=".gameturbo.receiver.BootReceiver"
+    android:enabled="true"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+    </intent-filter>
+</receiver>
+
+<receiver
+    android:name=".gameturbo.receiver.PackageChangeReceiver"
+    android:enabled="true"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.PACKAGE_ADDED" />
+        <action android:name="android.intent.action.PACKAGE_REMOVED" />
+        <action android:name="android.intent.action.PACKAGE_REPLACED" />
+        <data android:scheme="package" />
+    </intent-filter>
+</receiver>
+
+<!-- Game Turbo Activity -->
+<activity
+    android:name=".gameturbo.ui.MainActivity"
+    android:enabled="true"
+    android:exported="true"
+    android:label="@string/gameturbo_app_name"
+    android:theme="@style/Theme.GameTurbo"
+    android:launchMode="singleTop">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>

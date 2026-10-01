@@ -428,5 +428,6 @@ export default {
   "donate-status-failed": "Payment failed.",
   "donate-total": "Total",
   "donate-fee": "Fee",
-  "donate-tx": "Transaction"
+  "donate-tx": "Transaction",
+  "donate-powered": "Powered by QRIS"
 };

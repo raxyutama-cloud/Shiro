@@ -4,7 +4,9 @@
   "version": "4.4.2",
   "identifier": "com.mori.downloader",
   "build": {
-    "frontendDist": "../public"
+    "frontendDist": "../public",
+    "beforeBuildCommand": "",
+    "beforeDevCommand": ""
   },
   "app": {
     "withGlobalTauri": true,
@@ -16,7 +18,9 @@
         "minWidth": 360,
         "minHeight": 600,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false
       }
     ],
     "security": {
@@ -34,9 +38,66 @@
       "icons/icon.ico"
     ],
     "resources": ["README.txt"],
+    "copyright": "© 2025 Raxy Utama",
+    "category": "DeveloperTool",
+    "shortDescription": "Fast media downloader for 16+ platforms",
+    "longDescription": "Shiro is a fast and versatile media downloader. Save videos, photos, and music from TikTok, Instagram, YouTube, Twitter/X, Douyin & 16+ platforms. No watermarks. No accounts. No tracking.",
     "macOS": {
       "frameworks": [],
-      "minimumSystemVersion": "10.15"
+      "minimumSystemVersion": "10.15",
+      "exceptionDomain": "",
+      "signingIdentity": null,
+      "providerShortName": null,
+      "entitlements": null
+    },
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper",
+        "silent": true
+      }
+    },
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.1-0", "libayatana-appindicator3-1", "librsvg2-common"]
+      },
+      "appimage": {
+        "bundleMediaFramework": true
+      }
+    }
+  },
+  "plugins": {
+    "http": {
+      "all": true
+    },
+    "dialog": {
+      "all": true
+    },
+    "fs": {
+      "all": true,
+      "scope": {
+        "allow": [
+          "$DOWNLOAD/*",
+          "$DOCUMENT/*",
+          "$DESKTOP/*",
+          "$HOME/*"
+        ]
+      }
+    },
+    "shell": {
+      "all": false,
+      "open": true
+    },
+    "notification": {
+      "all": true
+    },
+    "os": {
+      "all": true
+    },
+    "clipboard": {
+      "all": true
     }
   }
 }

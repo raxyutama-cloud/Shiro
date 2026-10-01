@@ -1,0 +1,25 @@
+<resources>
+    <style name="Theme.GameTurbo" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/gameturbo_primary</item>
+        <item name="colorPrimaryVariant">@color/gameturbo_primary_variant</item>
+        <item name="colorOnPrimary">@color/gameturbo_on_primary</item>
+        
+        <item name="colorSecondary">@color/gameturbo_secondary</item>
+        <item name="colorSecondaryVariant">@color/gameturbo_secondary_variant</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        
+        <item name="colorError">@color/gameturbo_error</item>
+        <item name="colorOnError">@android:color/white</item>
+        
+        <item name="colorSurface">@color/gameturbo_surface</item>
+        <item name="colorOnSurface">@color/gameturbo_on_surface</item>
+        
+        <item name="android:colorBackground">@color/gameturbo_background</item>
+        <item name="colorOnBackground">@color/gameturbo_on_background</item>
+        
+        <item name="android:statusBarColor">@color/gameturbo_surface</item>
+        <item name="android:navigationBarColor">@color/gameturbo_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

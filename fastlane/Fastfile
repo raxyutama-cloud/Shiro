@@ -1,0 +1,126 @@
+# =============================================================================
+# Fastlane Fastfile untuk Shiro iOS
+# =============================================================================
+# Jalankan: bundle exec fastlane ios beta     # TestFlight
+#           bundle exec fastlane ios release  # App Store
+#           bundle exec fastlane ios build    # Build lokal (unsigned)
+# =============================================================================
+
+default_platform(:ios)
+
+platform :ios do
+  # ---------------------------------------------------------------------------
+  # Setup
+  # ---------------------------------------------------------------------------
+  before_all do
+    setup_ci if ENV['CI']
+    # xcversion(version: "15.2")  # Pin Xcode version jika perlu
+  end
+
+  # ---------------------------------------------------------------------------
+  # Lanes
+  # ---------------------------------------------------------------------------
+
+  desc "Build unsigned IPA untuk testing (lokal)"
+  lane :build do
+    build_ios_app(
+      workspace: "ios/App/App.xcworkspace",
+      scheme: "App",
+      configuration: "Release",
+      export_method: "ad-hoc",
+      export_options: {
+        compileBitcode: false,
+        signingStyle: "manual",
+        signingCertificate: "",
+        provisioningProfiles: {}
+      },
+      output_directory: "build/ios",
+      output_name: "Shiro.ipa",
+      silent: true,
+      clean: true,
+      xcargs: "CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=\"\""
+    )
+  end
+
+  desc "Deploy ke TestFlight (Internal/External)"
+  lane :beta do
+    sync_code_signing(type: "appstore")  # match appstore
+    
+    build_ios_app(
+      workspace: "ios/App/App.xcworkspace",
+      scheme: "App",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build/ios",
+      output_name: "Shiro.ipa",
+      clean: true
+    )
+    
+    upload_to_testflight(
+      skip_wait_for_build_processing: true,
+      changelog: "Shiro build #{lane_context[SharedValues::BUILD_NUMBER]}",
+      groups: ["Internal Testers"],  # Ganti dengan nama grup Anda
+      distribute_external: false,
+      notify_external_testers: false
+    )
+  end
+
+  desc "Deploy ke App Store (Release production)"
+  lane :release do
+    sync_code_signing(type: "appstore")
+    
+    # Bump version otomatis dari git tag
+    version = last_git_tag.gsub(/^v/, '')
+    increment_version_number(version_number: version)
+    increment_build_number(build_number: latest_testflight_build_number + 1)
+    
+    build_ios_app(
+      workspace: "ios/App/App.xcworkspace",
+      scheme: "App",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build/ios",
+      output_name: "Shiro.ipa",
+      clean: true
+    )
+    
+    upload_to_app_store(
+      force: true,
+      skip_metadata: false,
+      skip_screenshots: true,
+      skip_binary_upload: false,
+      submit_for_review: false,
+      automatic_release: false,
+      precheck_include_in_app_purchases: false
+    )
+  end
+
+  desc "Setup certificates & profiles via match (Jalankan sekali)"
+  lane :setup_match do
+    sync_code_signing(type: "development")
+    sync_code_signing(type: "appstore")
+    sync_code_signing(type: "adhoc")
+  end
+
+  desc "Refresh provisioning profiles"
+  lane :refresh_profiles do
+    match(type: "development", force_for_new_devices: true)
+    match(type: "appstore", force_for_new_devices: true)
+    match(type: "adhoc", force_for_new_devices: true)
+  end
+
+  # ---------------------------------------------------------------------------
+  # Private helpers
+  # ---------------------------------------------------------------------------
+  private_lane :sync_code_signing do |options|
+    match(
+      type: options[:type],
+      readonly: is_ci,
+      app_identifier: ["com.mori.downloader"],
+      git_url: ENV['MATCH_GIT_URL'] || "https://github.com/raxyutama-cloud/shiro-certificates",
+      git_branch: "main",
+      shallow_clone: true,
+      clone_branch_directly: true
+    )
+  end
+end

@@ -427,5 +427,6 @@ export default {
   "donate-status-failed": "Pembayaran gagal.",
   "donate-total": "Total",
   "donate-fee": "Biaya admin",
-  "donate-tx": "Transaksi"
+  "donate-tx": "Transaksi",
+  "donate-powered": "Didukung oleh QRIS"
 };

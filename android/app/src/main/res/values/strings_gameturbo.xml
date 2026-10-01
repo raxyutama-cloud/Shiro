@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gameturbo_app_name">Game Turbo</string>
+    <string name="gameturbo_boost_active">Boost Active</string>
+    <string name="gameturbo_boost_inactive">Boost Inactive</string>
+    <string name="gameturbo_shizuku_required">Shizuku permission required</string>
+    <string name="gameturbo_overlay_permission">Overlay permission needed for floating widget</string>
+    <string name="gameturbo_no_games_found">No games detected</string>
+    <string name="gameturbo_scan_games">Scan for games</string>
+    <string name="gameturbo_profile_saved">Profile saved</string>
+    <string name="gameturbo_profile_reset">Profile reset to defaults</string>
+    <string name="gameturbo_export_success">Configuration exported to Downloads</string>
+    <string name="gameturbo_import_success">Configuration imported</string>
+</resources>

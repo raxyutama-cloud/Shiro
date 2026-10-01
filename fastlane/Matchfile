@@ -1,0 +1,16 @@
+# =============================================================================
+# Fastlane Matchfile untuk Shiro iOS
+# =============================================================================
+# Konfigurasi match (certificate repo)
+# =============================================================================
+
+git_url("https://github.com/raxyutama-cloud/shiro-certificates")
+storage_mode("git")
+type("development")  # default type
+app_identifier(["com.mori.downloader"])
+username("YOUR_APPLE_ID@email.com")
+team_id("YOUR_TEAM_ID")
+readonly(false)
+generate_apple_certs(true)
+skip_confirmation(true)
+verbose(true)

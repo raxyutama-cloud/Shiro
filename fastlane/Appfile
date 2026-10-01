@@ -1,0 +1,16 @@
+# =============================================================================
+# Fastlane Appfile untuk Shiro iOS
+# =============================================================================
+# Copy file ini ke fastlane/Appfile dan isi nilai asli
+# JANGAN COMMIT nilai sensitif ke git!
+# =============================================================================
+
+app_identifier("com.mori.downloader")  # Bundle ID
+apple_id("YOUR_APPLE_ID@email.com")    # Apple ID untuk App Store Connect
+team_id("YOUR_TEAM_ID")                # Team ID (10 karakter, dari developer.apple.com)
+itc_team_id("YOUR_ITC_TEAM_ID")        # iTunes Connect Team ID (opsional, biasanya sama dengan team_id)
+
+# Untuk build lokal tanpa match, gunakan:
+# xcodeproj("ios/App/App.xcodeproj")
+# Untuk match (direkomendasikan):
+# match_type("appstore")  # atau "adhoc", "development", "enterprise"

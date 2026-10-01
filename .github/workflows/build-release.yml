@@ -1,0 +1,379 @@
+name: Build & Release Shiro
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v4.4.2)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  NODE_VERSION: '20'
+  RUST_VERSION: 'stable'
+
+jobs:
+  # ============================================================
+  # ANDROID BUILD
+  # ============================================================
+  build-android:
+    name: Android (AAB)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Build Release AAB
+        working-directory: android
+        run: ./gradlew bundleRelease --no-daemon
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiro-android-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+  # ============================================================
+  # iOS BUILD (macOS runner)
+  # ============================================================
+  build-ios:
+    name: iOS (IPA)
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods
+
+      - name: Sync Capacitor
+        run: npx cap sync ios
+
+      - name: Install Pods
+        working-directory: ios/App
+        run: pod install --repo-update
+
+      - name: Build for Archive
+        working-directory: ios/App
+        run: |
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination generic/platform=iOS \
+            -archivePath build/App.xcarchive \
+            clean archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Export IPA (unsigned)
+        working-directory: ios/App
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist exportOptions.plist
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiro-ios-ipa
+          path: ios/App/build/ipa/*.ipa
+          retention-days: 30
+
+  # ============================================================
+  # WINDOWS BUILD (Tauri)
+  # ============================================================
+  build-windows:
+    name: Windows (MSI)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            src-tauri/target
+          key: cargo-${{ runner.os }}-${{ hashFiles('src-tauri/Cargo.lock') }}
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version ^2
+
+      - name: Build Tauri (Windows)
+        working-directory: src-tauri
+        run: cargo tauri build --target x86_64-pc-windows-msvc
+
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiro-windows-msi
+          path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+          retention-days: 30
+
+  # ============================================================
+  # MACOS BUILD (Tauri)
+  # ============================================================
+  build-macos:
+    name: macOS (DMG)
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: universal-apple-darwin
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            src-tauri/target
+          key: cargo-${{ runner.os }}-${{ hashFiles('src-tauri/Cargo.lock') }}
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version ^2
+
+      - name: Build Tauri (macOS Universal)
+        working-directory: src-tauri
+        run: cargo tauri build --target universal-apple-darwin
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiro-macos-dmg
+          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+          retention-days: 30
+
+  # ============================================================
+  # LINUX BUILD (Tauri)
+  # ============================================================
+  build-linux:
+    name: Linux (DEB + AppImage)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libssl-dev
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            src-tauri/target
+          key: cargo-${{ runner.os }}-${{ hashFiles('src-tauri/Cargo.lock') }}
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version ^2
+
+      - name: Build Tauri (Linux)
+        working-directory: src-tauri
+        run: cargo tauri build
+
+      - name: Upload DEB + AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiro-linux
+          path: |
+            src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/appimage/*.AppImage
+          retention-days: 30
+
+  # ============================================================
+  # CREATE RELEASE
+  # ============================================================
+  release:
+    name: Create GitHub Release
+    needs: [build-android, build-ios, build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Rename artifacts
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          mkdir -p release
+          
+          # Android
+          if [ -f dist/shiro-android-aab/app-release.aab ]; then
+            cp dist/shiro-android-aab/app-release.aab release/Shiro_${VERSION}_android.aab
+          fi
+          
+          # iOS
+          if [ -f dist/shiro-ios-ipa/*.ipa ]; then
+            cp dist/shiro-ios-ipa/*.ipa release/Shiro_${VERSION}_ios.ipa
+          fi
+          
+          # Windows
+          if [ -f dist/shiro-windows-msi/*.msi ]; then
+            cp dist/shiro-windows-msi/*.msi release/Shiro_${VERSION}_windows.msi
+          fi
+          
+          # macOS
+          if [ -f dist/shiro-macos-dmg/*.dmg ]; then
+            cp dist/shiro-macos-dmg/*.dmg release/Shiro_${VERSION}_macos.dmg
+          fi
+          
+          # Linux
+          if [ -f dist/shiro-linux/*.deb ]; then
+            cp dist/shiro-linux/*.deb release/Shiro_${VERSION}_linux.deb
+          fi
+          if [ -f dist/shiro-linux/*.AppImage ]; then
+            cp dist/shiro-linux/*.AppImage release/Shiro_${VERSION}_linux.AppImage
+          fi
+          
+          ls -la release/
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          cat > CHANGELOG.md << 'EOF'
+          ## Shiro v${VERSION}
+          
+          ### 📱 Supported Platforms
+          - **Android** — AAB (Play Store ready)
+          - **iOS** — IPA (TestFlight / App Store)
+          - **Windows** — MSI installer
+          - **macOS** — DMG (Universal Intel + Apple Silicon)
+          - **Linux** — DEB + AppImage
+          
+          ### ✨ What's New
+          - Improved donation modal UI (cleaner, no external links)
+          - Better QRIS payment flow
+          - Cross-platform build pipeline
+          - Bug fixes & performance improvements
+          
+          ### 📥 Installation
+          Download the appropriate file for your platform and install.
+          
+          ---
+          *Built from ${{ github.sha }}*
+          EOF
+          cat CHANGELOG.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Shiro ${{ github.ref_name }}
+          body_path: CHANGELOG.md
+          files: release/*
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
